@@ -72,7 +72,7 @@ Robot::Robot()
     wait(); // 보드 준비 대기
 }
 
-// HW 준비 대기
+// ------- Wait All Nodes -------
 void Robot::wait(std::int32_t timeout_ms) {
     const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
     const auto retry_sleep = std::chrono::milliseconds(100);
@@ -143,14 +143,23 @@ void Robot::wait(std::int32_t timeout_ms) {
                 continue;
             }
         }
-        cache_motor_values(mcu_str, p_in_mcu_str, v_in_mcu_str, t_in_mcu_str);
-        cache_imu_values  (mcu_str, gx_in_mcu_str, gy_in_mcu_str, gz_in_mcu_str, pgx_in_mcu_str, pgy_in_mcu_str);
-        cache_status_values(status_str, patt_in_status_str, emergency_in_status_str);
         return;
     }
     throw RobotInitError("Motor start timeout");
 }
-
+// ------- Set gains -------
+void Robot::set_gains(const std::vector<float>& kp_, const std::vector<float>& kd_) {
+    if (kp_.size() != last_action_len)
+        throw RobotSetGainsError("kp length mismatch for the robot.");
+    if (kd_.size() != last_action_len)
+        throw RobotSetGainsError("kd length mismatch for the robot.");
+    if (kp_[6] != 0.0f || kp_[7] != 0.0f)
+        throw RobotSetGainsError("Wheel motor kp must be zero for indices 6 and 7.");
+    for (float v : kp_) if (v < 0.0f) throw RobotSetGainsError("kp must be non-negative.");
+    for (float v : kd_) if (v < 0.0f) throw RobotSetGainsError("kd must be non-negative.");
+    kp = kp_; kd = kd_; gains_set = true;
+}
+// ------- Cache MOTOR Values -------
 void Robot::cache_motor_values(const std::string& str,
                                std::vector<std::size_t>& ppos,
                                std::vector<std::size_t>& vpos,
@@ -188,7 +197,7 @@ void Robot::cache_motor_values(const std::string& str,
         cur = p;
     }
 }
-
+// ------- Cache IMU Values -------
 void Robot::cache_imu_values(const std::string& str,
                              std::size_t& gx, std::size_t& gy, std::size_t& gz,
                              std::size_t& pgx, std::size_t& pgy)
@@ -207,21 +216,9 @@ void Robot::cache_imu_values(const std::string& str,
     pos = str.find("pgx:", imu_base); pgx = (pos == std::string::npos)  ? 0 : pos + 4;
     pos = str.find("pgy:", imu_base); pgy = (pos == std::string::npos)  ? 0 : pos + 4;
     pos = str.find("pgz:", imu_base); pgz_in_mcu_str = (pos == std::string::npos) ? 0 : pos + 4;
+    
 }
-
-// ------- Set gains -------
-void Robot::set_gains(const std::vector<float>& kp_, const std::vector<float>& kd_) {
-    if (kp_.size() != last_action_len)
-        throw RobotSetGainsError("kp length mismatch for the robot.");
-    if (kd_.size() != last_action_len)
-        throw RobotSetGainsError("kd length mismatch for the robot.");
-    if (kp_[6] != 0.0f || kp_[7] != 0.0f)
-        throw RobotSetGainsError("Wheel motor kp must be zero for indices 6 and 7.");
-    for (float v : kp_) if (v < 0.0f) throw RobotSetGainsError("kp must be non-negative.");
-    for (float v : kd_) if (v < 0.0f) throw RobotSetGainsError("kd must be non-negative.");
-    kp = kp_; kd = kd_; gains_set = true;
-}
-
+// ------- Cache STATUS Values -------
 void Robot::cache_status_values(const std::string& status_str,
                                 std::vector<std::size_t>& patt_vec,
                                 std::size_t& emergency_pos)
@@ -235,15 +232,50 @@ void Robot::cache_status_values(const std::string& status_str,
     std::size_t epos = status_str.find("EMERGENCY:");
     emergency_pos = epos + 10;   
 }
+// ------- Parse Observation -------
+std::unordered_map<std::string, std::vector<float>>& Robot::parse_obs(const std::string& mcu_str) {
+    std::cout << mcu_str << std::endl;
+    if (!check_mcu(mcu_str, motor_ids)) {
+        return obs;
+    }
+    auto& dof_pos   = obs["dof_pos"]; // 6
+    auto& dof_vel   = obs["dof_vel"]; // 8
+    auto& ang_vel   = obs["ang_vel"];
+    auto& proj_grav = obs["proj_grav"];
+    
+    // 위치: M1..M6 -> dof_pos[0..5]
+    for (int i = 0; i < 6; ++i) {
+        int mid = i + 1; // 1..6
+        std::size_t pstart = p_in_mcu_str[mid];
+        float val = std::stof(mcu_str.substr(pstart));
+        dof_pos[i] = val + pos_offset[joint_names[i]];
+    }
 
-// ------- Observation (returns copy; internal buffers reused) -------
+    // 속도: M1..M8 -> dof_vel[0..7]
+    for (int i = 0; i < 8; ++i) {
+        int mid = i + 1; // 1..8
+        std::size_t vstart = v_in_mcu_str[mid];
+        float val = std::stof(mcu_str.substr(vstart));
+        dof_vel[i] = val;
+    }
+
+    // IMU 
+    ang_vel[0]   = std::stof(mcu_str.substr(gx_in_mcu_str));
+    ang_vel[1]   = std::stof(mcu_str.substr(gy_in_mcu_str));
+    ang_vel[2]   = std::stof(mcu_str.substr(gz_in_mcu_str));
+    proj_grav[0] = std::stof(mcu_str.substr(pgx_in_mcu_str));
+    proj_grav[1] = std::stof(mcu_str.substr(pgy_in_mcu_str));
+    proj_grav[2] = std::stof(mcu_str.substr(pgz_in_mcu_str));
+    
+    return obs;
+}
+// ------- Get Observation -------
 std::unordered_map<std::string, std::vector<float>> Robot::get_obs() {
     std::string mcu_str = cli.req(motor_ids);
     auto& parsed = parse_obs(mcu_str);
     return parsed;
 }
-
-// ------- Action -------
+// ------- Do Action -------
 void Robot::do_action(const std::vector<float>& action, bool torque_ctrl) {
     if (!gains_set)
         throw RobotSetGainsError("Robot's kp and kd must be provided before do_action.");
@@ -289,17 +321,51 @@ void Robot::do_action(const std::vector<float>& action, bool torque_ctrl) {
     
     check_safety();
 }
-// ------- E-Stop API -------
-[[noreturn]] void Robot::estop(const std::string& msg) {
-    const auto retry = std::chrono::milliseconds(10);
-    for (;;) {
-        bool ok = cli.motor_estop(motor_ids); 
-        if (ok) break;
-        std::this_thread::sleep_for(retry);
+// Check MCU Data
+bool Robot::check_mcu(const std::string& mcu_str, const std::vector<uint8_t>& mids) {
+    if (mcu_str.find("OK <REQ>") == std::string::npos) {
+        cli_missed_req += 1;
+        return false;
     }
-    throw RobotEStopError(msg.empty() ? "E-stop triggered" : msg);
+    cache_motor_values(mcu_str, p_in_mcu_str, v_in_mcu_str, t_in_mcu_str);
+    cache_imu_values  (mcu_str, gx_in_mcu_str, gy_in_mcu_str, gz_in_mcu_str, pgx_in_mcu_str, pgy_in_mcu_str);
+
+    for (std::size_t id : mids) {
+        if (id == 0 || id > last_action_len) { cli_missed_req += 1; return false; }
+        if (mcu_str[p_in_mcu_str[id]] == 'N') { cli_missed_req += 1; return false; }
+        if (mcu_str[v_in_mcu_str[id]] == 'N') { cli_missed_req += 1; return false; }
+        if (mcu_str[t_in_mcu_str[id]] == 'N') { cli_missed_req += 1; return false; }
+    }
+    if (mcu_str[gx_in_mcu_str]  == 'N') { cli_missed_req += 1; return false; }
+    if (mcu_str[gy_in_mcu_str]  == 'N') { cli_missed_req += 1; return false; }
+    if (mcu_str[gz_in_mcu_str]  == 'N') { cli_missed_req += 1; return false; }
+    if (mcu_str[pgx_in_mcu_str] == 'N') { cli_missed_req += 1; return false; }
+    if (mcu_str[pgy_in_mcu_str] == 'N') { cli_missed_req += 1; return false; }
+    if (mcu_str[pgz_in_mcu_str] == 'N') { cli_missed_req += 1; return false; }
+
+    return true;
 }
-// ------- Safety check -------
+// Check STATUS Data
+std::pair<bool,bool> Robot::check_status(const std::string& status_str, const std::vector<uint8_t>& mids) {
+    bool disconn_flag = false;
+    bool emergency_flag = false;
+
+    if (status_str.find("OK <STATUS>") == std::string::npos) {
+        disconn_flag = true;
+    } else {
+        cache_status_values(status_str, patt_in_status_str, emergency_in_status_str);
+        for (auto id : mids) {
+            std::size_t idx = patt_in_status_str[id];
+            char c0 = status_str[idx];        
+            if (!std::isdigit(static_cast<unsigned char>(c0))) { disconn_flag = true; break; }
+            int pattern = std::stoi(status_str.substr(idx));
+            if (pattern != 2) { disconn_flag = true; break; }
+        }
+        emergency_flag = (status_str.substr(emergency_in_status_str, 2) == "ON");
+    }
+    return {disconn_flag, emergency_flag};
+}
+// ------- Check Saftey -------
 void Robot::check_safety() { 
     std::string status_str = cli.status();
     auto [dis, emg] = check_status(status_str, motor_ids); 
@@ -315,81 +381,7 @@ void Robot::check_safety() {
 
     check_obs(obs);
 }
-
-std::pair<bool,bool> Robot::check_status(const std::string& status_str, const std::vector<uint8_t>& mids) {
-    bool disconn_flag = false;
-    bool emergency_flag = false;
-
-    if (status_str.find("OK <STATUS>") == std::string::npos) {
-        disconn_flag = true;
-    } else {
-        for (auto id : mids) {
-            std::size_t idx = patt_in_status_str[id];
-            char c0 = status_str[idx];        
-            if (!std::isdigit(static_cast<unsigned char>(c0))) { disconn_flag = true; break; }
-            int pattern = std::stoi(status_str.substr(idx));
-            if (pattern != 2) { disconn_flag = true; break; }
-        }
-        emergency_flag = (status_str.substr(emergency_in_status_str, 2) == "ON");
-    }
-    return {disconn_flag, emergency_flag};
-}
-
-bool Robot::check_mcu(const std::string& mcu_str, const std::vector<uint8_t>& mids) {
-    if (mcu_str.find("OK <REQ>") == std::string::npos) {
-        cli_missed_req += 1;
-        return false;
-    }
-
-    for (std::size_t id : mids) {
-        if (id == 0 || id > last_action_len) { cli_missed_req += 1; return false; }
-        std::size_t ps = p_in_mcu_str[id];
-        std::size_t vs = v_in_mcu_str[id];
-        std::size_t ts = t_in_mcu_str[id];
-        if (ps < mcu_str.size() && mcu_str[ps] == 'N') { cli_missed_req += 1; return false; }
-        if (vs < mcu_str.size() && mcu_str[vs] == 'N') { cli_missed_req += 1; return false; }
-        if (ts < mcu_str.size() && mcu_str[ts] == 'N') { cli_missed_req += 1; return false; }
-    }
-    return true;
-}
-
-// Parse obs 
-std::unordered_map<std::string, std::vector<float>>& Robot::parse_obs(const std::string& mcu_str) {
-    if (!check_mcu(mcu_str, motor_ids)) {
-        return obs;
-    }
-    auto& dof_pos   = obs["dof_pos"]; // 6
-    auto& dof_vel   = obs["dof_vel"]; // 8
-    auto& ang_vel   = obs["ang_vel"];
-    auto& proj_grav = obs["proj_grav"];
-    
-    // ---- 위치: M1..M6 -> dof_pos[0..5] ----
-    for (int i = 0; i < 6; ++i) {
-        int mid = i + 1; // 1..6
-        std::size_t pstart = p_in_mcu_str[mid];
-        float val = std::stof(mcu_str.substr(pstart));
-        dof_pos[i] = val + pos_offset[joint_names[i]];
-    }
-
-    // ---- 속도: M1..M8 -> dof_vel[0..7] ----
-    for (int i = 0; i < 8; ++i) {
-        int mid = i + 1; // 1..8
-        std::size_t vstart = v_in_mcu_str[mid];
-        float val = std::stof(mcu_str.substr(vstart));
-        dof_vel[i] = val;
-    }
-
-    // ---- IMU ----
-    ang_vel[0]   = std::stof(mcu_str.substr(gx_in_mcu_str));
-    ang_vel[1]   = std::stof(mcu_str.substr(gy_in_mcu_str));
-    ang_vel[2]   = std::stof(mcu_str.substr(gz_in_mcu_str));
-    proj_grav[0] = std::stof(mcu_str.substr(pgx_in_mcu_str));
-    proj_grav[1] = std::stof(mcu_str.substr(pgy_in_mcu_str));
-    proj_grav[2] = std::stof(mcu_str.substr(pgz_in_mcu_str));
-    
-    return obs;
-}
-// ------- Check obs -------
+// ------- Check Obs -------
 void Robot::check_obs(const std::unordered_map<std::string, std::vector<float>>& obs) {  
     const auto& q_obs = obs.at("dof_pos"); // 6
     const auto& q_vel = obs.at("dof_vel"); // 8
@@ -427,5 +419,14 @@ void Robot::check_obs(const std::unordered_map<std::string, std::vector<float>>&
         }
     }
 }
-
+// ------- E-Stop API -------
+[[noreturn]] void Robot::estop(const std::string& msg) {
+    const auto retry = std::chrono::milliseconds(10);
+    for (;;) {
+        bool ok = cli.motor_estop(motor_ids); 
+        if (ok) break;
+        std::this_thread::sleep_for(retry);
+    }
+    throw RobotEStopError(msg.empty() ? "E-stop triggered" : msg);
+}
 } // namespace robot

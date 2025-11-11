@@ -37,10 +37,10 @@ rl.set_mode(mode_id=1)
 def loop():
     obs = robot.get_obs()             # Get observation
     cmd = joystick.get_cmd()          # Get command
-
+    print(obs["dof_pos"])
     state = rl.build_state(obs, cmd)  # Build state
     action = rl.select_action(state)  # Select action
-    robot.do_action(action)           # Do action
+    #robot.do_action(action)           # Do action
 
 loop()
 
