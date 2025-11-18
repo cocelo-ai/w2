@@ -50,11 +50,8 @@ public:
 
     explicit Mode(const ModeConfig& cfg);
 
-    // 외부에서 정책 주입(선택): 생성자에서 이미 자동 주입됨
-    void set_policy(std::shared_ptr<IPolicy> policy);
-
     // 1D 관측 → 액션 (float ONLY)
-    std::vector<float> inference(const std::vector<float>& obs1d);
+    std::vector<float> inference(const std::vector<float>& state1d);
 
     // 읽기용 메타
     const ObsLengthMap& obs_lengths() const { return obs_to_length_; }
@@ -78,9 +75,6 @@ public:
 
 private:
     static std::vector<float> normalize_scale(const ScaleSpec& spec, std::size_t length);
-
-    // 스케일 적용
-    void apply_scales_inplace(std::vector<float>& state) const;
 
     // 레이아웃 유효성 검사 및 길이 계산
     void compute_state_layout_();

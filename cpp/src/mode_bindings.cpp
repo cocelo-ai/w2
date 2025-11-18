@@ -1,6 +1,7 @@
 // mode_bindings.cpp (float-only)
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <iostream>
 
 #include "mode.hpp"
 
@@ -127,7 +128,6 @@ PYBIND11_MODULE(mode, m) {
             std::vector<float> state = state_obj.cast<std::vector<float>>();
             return self.inference(state);
         })
-
         // ===== 읽기 전용 프로퍼티들 (한 번에 전부 노출) =====
         .def_property_readonly("id", &Mode::id)
         .def_property_readonly("stack_size", &Mode::stack_size)

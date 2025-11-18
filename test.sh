@@ -33,9 +33,9 @@ mode = Mode(mode_cfg={
     "id" : 1,
     "stacked_obs_order": ["dof_pos", "dof_vel", "ang_vel", "proj_grav", "last_action"],
     "non_stacked_obs_order": ["command"],
-    "obs_scale": {"dof_vel": 0.15,
-                  "ang_vel": 0.25,
-                  "command": [2.0, 1.0, 0.25, 1.0]},
+    "obs_scale": {"dof_vel": 0.5,
+                  "ang_vel": 1,
+                  "command": [2, 1.0, 0.25, 1.0]},
     "action_scale": [10.0]*8,
     "stack_size": 3,
     "policy_path": "weight/policy.onnx",
@@ -55,10 +55,10 @@ rl = RL()
 rl.add_mode(mode)
 rl.set_mode(mode_id=1)
 obs1 = {
-        "dof_pos": [0.0] * 6,
-        "dof_vel": [0.0] * 8,
-        "ang_vel": [0.0] * 3,
-        "proj_grav": [0.0] * 3,
+        "dof_pos": [1, 2, 3, 4, 5, 6],
+        "dof_vel": [10, 20, 30, 40, 50, 60, 70, 80],
+        "ang_vel": [100, 200, 300],
+        "proj_grav": [1000, 2000, 3000],
 }
 obs2 = {
         "dof_pos": [1.0] * 6,

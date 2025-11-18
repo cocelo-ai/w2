@@ -4,57 +4,67 @@
 namespace rl {
 
 RL::RL() {
-    obs_to_length_ = {
+    modes.reserve(128);
+    obs_to_length = {
         {"dof_pos", 6}, {"dof_vel", 8}, {"lin_vel", 3},
         {"ang_vel", 3}, {"proj_grav", 3}, {"last_action", 8},
         {"height_map", 144}
     };
-    last_action_len_ = obs_to_length_.at("last_action");
-    last_action_.assign(last_action_len_, 0.0f);
-    scaled_action_.assign(last_action_len_, 0.0f);
-    single_frame_len_ = 0;
+    last_action_len = obs_to_length.at("last_action");
+    last_action.assign(last_action_len, 0.0f);
+    scaled_action.assign(last_action_len, 0.0f);
+    single_frame_len = 0;
 }
 
 void RL::add_mode(const ModeDesc& mode) {
-    for (auto& m : modes_) {
+    if(mode.id < 1 || mode.id > 16){
+        return;
+    }
+    for (auto& m : modes) {
         if (m.id == mode.id) {
             m = mode;
-            if (mode_ && mode_->id == mode.id) mode_ = &m;
+            if (cur_mode && cur_mode->id == mode.id) cur_mode = &m;
             return;
         }
     }
-    modes_.push_back(mode);
+    modes.push_back(mode);
 }
 
 void RL::set_mode(int mode_id) {
-    if (mode_id <= 0) return;
-    for (auto& m : modes_) {
+    if (mode_id < 1 || mode_id > 16) return;
+    for (auto& m : modes) {
         if (m.id == mode_id) {
-            obs_to_length_["command"] = static_cast<std::size_t>(m.cmd_vector_length);
+            // Assign command's length
+            obs_to_length["command"] = static_cast<std::size_t>(m.cmd_vector_length);
 
+            // Assign state's length
             std::size_t single_len = 0;
-            for (const auto& k : m.stacked_obs_order) single_len += get_obs_len_(k);
-            single_frame_len_ = single_len;
-            single_frame_.assign(single_frame_len_, 0.0f);
+            for (const auto& k : m.stacked_obs_order){
+                single_len += get_obs_len(k);
+            }
+            single_frame_len = single_len;
+            single_frame.assign(single_frame_len, 0.0f);
 
             std::size_t state_len = single_len * static_cast<std::size_t>(m.stack_size);
-            for (const auto& k : m.non_stacked_obs_order) state_len += get_obs_len_(k);
+            for (const auto& k : m.non_stacked_obs_order){
+                state_len += get_obs_len(k);
+            }
+            state.assign(state_len, 0.0f);
 
-            state_.assign(state_len, 0.0f);
-            last_action_.assign(last_action_len_, 0.0f);
-            scaled_action_.assign(last_action_len_, 0.0f);
+            // Assign action's length
+            last_action.assign(last_action_len, 0.0f);
+            scaled_action.assign(last_action_len, 0.0f);
 
-            mode_ = &m;
+            // Assign the mode property
+            cur_mode              = &m;
+            action_scale          = &m.action_scale;
+            stacked_obs_order     = &m.stacked_obs_order;
+            non_stacked_obs_order = &m.non_stacked_obs_order;
+            obs_scale             = &m.obs_scale;
+            stack_size            = m.stack_size;
+            inference             = m.inference;
 
-            cached_action_scale_      = &m.action_scale;
-            // command scale is stored inside obs_scale map; no separate cmd_scale
-            cached_stacked_order_     = &m.stacked_obs_order;
-            cached_non_stacked_order_ = &m.non_stacked_obs_order;
-            cached_stack_size_        = m.stack_size;
-            cached_obs_scale_map_     = &m.obs_scale;
-            infer_                    = m.inference;
-
-            if (cached_action_scale_->size() < last_action_len_) {
+            if (action_scale->size() < last_action_len) {
                 throw std::runtime_error("action_scale shorter than last_action length");
             }
             return;
@@ -71,112 +81,109 @@ std::vector<float> RL::build_state(
 
     if (last_action_opt) {
         const auto& v = *last_action_opt;
-        if (v.size() != last_action_len_) throw std::runtime_error("scaled_last_action length mismatch");
-        last_action_ = v;
+        if (v.size() != last_action_len) throw std::runtime_error("scaled_last_action length mismatch");
+        last_action = v;
     }
 
     std::size_t i = 0;
-    for (const auto& key : *cached_stacked_order_) {
-        std::size_t obs_len = get_obs_len_(key);
-        // Retrieve per-element scale; command is now handled via obs_scale map
-        const std::vector<float>& scale = get_obs_scale_(key, obs_len);
-
+    for (const auto& obs_key : *stacked_obs_order) {
+        // Get Observation and it's length & scale.
+        std::size_t obs_len = get_obs_len(obs_key);
+        const std::vector<float>& scale = get_obs_scale(obs_key, obs_len);
         const std::vector<float>* src = nullptr;
-        if (key == "command") {
+        if (obs_key == "command") {
             // Command vectors are stored under "cmd_vector" in cmd map
             auto itc = cmd.find("cmd_vector");
             if (itc != cmd.end()) src = &itc->second;
-        } else if (key == "last_action") {
-            src = &last_action_;
+        } else if (obs_key == "last_action") {
+            src = &last_action;
         } else {
-            auto ito = obs.find(key);
+            auto ito = obs.find(obs_key);
             if (ito != obs.end()) src = &ito->second;
         }
-
-        if (!src && key != "last_action") {
+        if (!src) {
             for (std::size_t k = 0; k < obs_len; ++k) {
-                single_frame_[i] = state_[i];
+                single_frame[i] = state[i];
                 ++i;
             }
         } else {
-            const std::vector<float>& v = src ? *src : last_action_;
-            for (std::size_t j = 0; j < obs_len; ++j) single_frame_[i++] = v[j] * scale[j];
+            for (std::size_t j = 0; j < obs_len; ++j){
+                single_frame[i] = (*src)[j] * scale[j];
+                ++i;
+            }
         }
     }
 
-    const std::size_t L = single_frame_len_;
-    const int S = cached_stack_size_;
+    const std::size_t L = single_frame_len;
+    const int S = stack_size;
     if (S > 1) {
         for (int k = S - 1; k > 0; --k) {
-            std::copy(state_.begin() + (k - 1) * L,
-                      state_.begin() + k * L,
-                      state_.begin() + k * L);
+            std::copy(state.begin() + (k - 1) * L,
+                      state.begin() + k * L,
+                      state.begin() + k * L);
         }
     }
-    std::copy(single_frame_.begin(), single_frame_.end(), state_.begin());
+    std::copy(single_frame.begin(), single_frame.end(), state.begin());
 
     std::size_t base = L * static_cast<std::size_t>(S);
-    for (const auto& key : *cached_non_stacked_order_) {
-        std::size_t obs_len = get_obs_len_(key);
-        // Retrieve per-element scale; command is now handled via obs_scale map
-        const std::vector<float>& scale = get_obs_scale_(key, obs_len);
-
+    for (const auto& obs_key : *non_stacked_obs_order) {
+        // Get Observation and it's length & scale.
+        std::size_t obs_len = get_obs_len(obs_key);
+        const std::vector<float>& scale = get_obs_scale(obs_key, obs_len);
         const std::vector<float>* src = nullptr;
-        if (key == "command") {
+
+        if (obs_key == "command") {
             auto itc = cmd.find("cmd_vector");
             if (itc != cmd.end()) src = &itc->second;
-        } else if (key == "last_action") {
-            src = &last_action_;
+        } else if (obs_key == "last_action") {
+            src = &last_action;
         } else {
-            auto ito = obs.find(key);
+            auto ito = obs.find(obs_key);
             if (ito != obs.end()) src = &ito->second;
         }
-
-        if (!src && key != "last_action") {
+        if (!src) {
             base += obs_len;
         } else {
-            const std::vector<float>& v = src ? *src : last_action_;
-            for (std::size_t j = 0; j < obs_len; ++j) state_[base + j] = v[j] * scale[j];
+            for (std::size_t j = 0; j < obs_len; ++j){
+            state[base + j] = (*src)[j] * scale[j];
+            }
             base += obs_len;
         }
     }
-
-    return state_;
+    return state;
 }
 
 std::vector<float> RL::select_action(const std::vector<float>& state) {
     ensure_mode_();
-    if (!infer_) throw std::runtime_error("inference callback not set");
-    std::vector<float> action = infer_(state);
+    last_action  = inference(state);
 
-    const std::size_t n = last_action_len_;
+    const std::size_t n = last_action_len;
     for (std::size_t i = 0; i < n; ++i) {
-        scaled_action_[i] = action[i] * (*cached_action_scale_)[i];
+        scaled_action[i] = last_action[i] * (*action_scale)[i];
     }
-    last_action_ = std::move(action);
-    return scaled_action_;
+    return scaled_action;
 }
 
 void RL::ensure_mode_() const {
-    if (!mode_) throw std::runtime_error("Mode is not set. Call set_mode() first.");
+    if (!cur_mode) throw std::runtime_error("Mode is not set. Call set_mode() first.");
 }
 
-std::size_t RL::get_obs_len_(const std::string& key) const {
-    auto it = obs_to_length_.find(key);
-    if (it == obs_to_length_.end()) throw std::runtime_error("Unknown observation key: " + key);
+std::size_t RL::get_obs_len(const std::string& key) const {
+    auto it = obs_to_length.find(key);
+    if (it == obs_to_length.end()) throw std::runtime_error("Unknown observation key: " + key);
     return it->second;
 }
 
-const std::vector<float>& RL::get_obs_scale_(const std::string& key, std::size_t len) const {
-    auto it = cached_obs_scale_map_->find(key);
-    if (it != cached_obs_scale_map_->end() && it->second.size() >= len) return it->second;
+const std::vector<float>& RL::get_obs_scale(const std::string& key, std::size_t len) const {
+    auto it = obs_scale->find(key);
+    if (it != obs_scale->end() && it->second.size() >= len) return it->second;
 
-    padding_buffer_.assign(len, 1.0f);
-    if (it != cached_obs_scale_map_->end()) {
+    padding_buffer.assign(len, 1.0f);
+    if (it != obs_scale->end()) {
         const auto& v = it->second;
-        for (std::size_t i = 0; i < v.size() && i < len; ++i) padding_buffer_[i] = v[i];
+        for (std::size_t i = 0; i < v.size() && i < len; ++i) padding_buffer[i] = v[i];
     }
-    return padding_buffer_;
+    return padding_buffer;
 }
 
 } // namespace rl

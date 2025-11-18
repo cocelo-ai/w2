@@ -64,14 +64,14 @@ PYBIND11_MODULE(rl, m) {
                 }
 
                 // 4) last_action (option)
-                std::vector<float> sla;
-                const std::vector<float>* sla_ptr = nullptr;
+                std::vector<float> la;
+                const std::vector<float>* la_ptr = nullptr;
                 if (!last_action.is_none()) {
-                    sla = last_action.cast<std::vector<float>>();
-                    sla_ptr = &sla;
+                    la = last_action.cast<std::vector<float>>();
+                    la_ptr = &la;
                 }
 
-                return self.build_state(obs_map, cmd_map, sla_ptr);
+                return self.build_state(obs_map, cmd_map, la_ptr);
             },
             py::arg("obs"), py::arg("cmd"), py::arg("last_action") = py::none()
         )

@@ -19,11 +19,16 @@ namespace robot {
 Robot::Robot()
     : 
     last_action_len(8),
+    last_action(last_action_len, 0.0f),  
+    last_torque_ctrl(false),      
+
     kp(last_action_len, 0.0f),
     kd(last_action_len, 0.0f),
     gains_set(false),
+
     motor_ids{1u,2u,3u,4u,5u,6u,7u,8u},
-    cli_disconn_timeout_ms(200),
+
+    cli_disconn_timeout_ms(100),
     cli_disconn_duration_ms(0),
     cli_missed_req(0),
     cli()
@@ -36,19 +41,6 @@ Robot::Robot()
     obs["lin_vel"] = std::vector<float>(3, 0.0f);
     obs["height_map"] = std::vector<float>(144, 0.6128f);
 
-    patt_in_status_str.assign(last_action_len + 1, 0);
-    emergency_in_status_str = 0;
-
-    p_in_mcu_str.assign(last_action_len + 1, 0);
-    v_in_mcu_str.assign(last_action_len + 1, 0);
-    t_in_mcu_str.assign(last_action_len + 1, 0);
-    gx_in_mcu_str  = 0;
-    gy_in_mcu_str  = 0;
-    gz_in_mcu_str  = 0;
-    pgx_in_mcu_str = 0;
-    pgy_in_mcu_str = 0;
-    pgz_in_mcu_str = 0;
-
     // Offsets & limits
     pos_offset = {
         {"left_hip", 0.0f}, {"right_hip", 0.0f},
@@ -56,14 +48,14 @@ Robot::Robot()
         {"left_leg", 0.0f}, {"right_leg", 0.0f},
     };
     rel_max_pos = {
-        {"left_hip", 3.14f}, {"right_hip", 3.14f},
-        {"left_shoulder", 3.14f}, {"right_shoulder", 3.14f},
-        {"left_leg", 3.14f}, {"right_leg", 3.14f},
+        {"left_hip", 0.6f},   {"right_hip", 0.6f},
+        {"left_shoulder", 1.4f}, {"right_shoulder", 1.4f},
+        {"left_leg", 1.8f},  {"right_leg", 1.8f},
     };
     rel_min_pos = {
-        {"left_hip", -3.14f}, {"right_hip", -3.14f},
-        {"left_shoulder", -3.14f}, {"right_shoulder", -3.14f},
-        {"left_leg", -3.14f}, {"right_leg", -3.14f},
+        {"left_hip", -0.6f},   {"right_hip", -0.6f},
+        {"left_shoulder", -1.4f}, {"right_shoulder", -1.4f},
+        {"left_leg", -0.9f}, {"right_leg", -0.9f},
     };
     joint_names = { // pos 인덱스 0..5에 해당하는 관절 이름
         "left_hip","right_hip","left_shoulder","right_shoulder","left_leg","right_leg",
@@ -84,69 +76,32 @@ void Robot::wait(std::int32_t timeout_ms) {
             continue;
         }
         
-        std::string status_str = cli.status();
-        if (status_str.find("OK <STATUS>") == std::string::npos){
-            std::this_thread::sleep_for(retry_sleep);
-            continue;
-        }
-
-        cache_status_values(status_str, patt_in_status_str, emergency_in_status_str);
-        auto [dis, emg] = check_status(status_str, motor_ids);
+        FxCliMap status = cli.status();
+        auto [dis, emg] = check_status(status, motor_ids);
         if (dis || emg) {
             std::this_thread::sleep_for(retry_sleep);
             continue;
         }
 
-        std::string mcu_str = cli.req(motor_ids);
-        if(mcu_str.find("OK <REQ>") == std::string::npos){
+        FxCliMap mcu_obs = cli.req(motor_ids);
+        parse_obs(mcu_obs);
+        if(cli_missed_req > 1){
             std::this_thread::sleep_for(retry_sleep);
             continue;
         }
-        else{
-            // ─────────────────────────────────────────────
-            // (A) 모터 값 검증
-            // ─────────────────────────────────────────────
-            bool motor_ok = true;
-            const char* mid_keys[] = {"M1:","M2:","M3:","M4:","M5:","M6:","M7:","M8:"};
-            for (const char* mid : mid_keys) {
-                size_t mid_pos = mcu_str.find(mid);
-                if (mid_pos == std::string::npos) { motor_ok=false; break; }
-                for (const char* key : {"p:","v:","t:"}) {
-                    size_t pos = mcu_str.find(key, mid_pos);
-                    if (pos == std::string::npos) { motor_ok=false; break; }
-                    if (mcu_str.substr(pos + std::strlen(key), 1) == "N") { motor_ok=false; break; }
-                }
-            }
-            if(!motor_ok){
-                std::this_thread::sleep_for(retry_sleep);
-                continue;
-            }
-            // ─────────────────────────────────────────────
-            // (B) IMU 값 검증
-            // ─────────────────────────────────────────────
-            std::size_t imu_pos = mcu_str.rfind("IMU");
-            if (imu_pos == std::string::npos) {
-                std::this_thread::sleep_for(retry_sleep);
-                continue;
-            }
-            bool imu_ok = true;
-            const char* imu_keys[] = {"r:", "p:", "y:", "gx:", "gy:", "gz:", "pgx:", "pgy:", "pgz:"};
-            for (const char* key : imu_keys) {
-                size_t pos = mcu_str.find(key, imu_pos);
-                if (mcu_str.substr(pos + std::strlen(key), 1) == "N") {
-                    imu_ok = false;
-                    break;
-                }
-            }
-            if (!imu_ok) {
-                std::this_thread::sleep_for(retry_sleep);
-                continue;
-            }
+        auto& dof_pos = obs.at("dof_pos");
+        for(int i=0; i<6; ++i){ // M1 .... M6
+            last_action[i] = dof_pos[i];
         }
+        for(int i=6; i<8; ++i){ // M7, M8
+            last_action[i] = 0.0f;
+        }
+        last_torque_ctrl = false;
         return;
     }
     throw RobotInitError("Motor start timeout");
 }
+
 // ------- Set gains -------
 void Robot::set_gains(const std::vector<float>& kp_, const std::vector<float>& kd_) {
     if (kp_.size() != last_action_len)
@@ -159,126 +114,137 @@ void Robot::set_gains(const std::vector<float>& kp_, const std::vector<float>& k
     for (float v : kd_) if (v < 0.0f) throw RobotSetGainsError("kd must be non-negative.");
     kp = kp_; kd = kd_; gains_set = true;
 }
-// ------- Cache MOTOR Values -------
-void Robot::cache_motor_values(const std::string& str,
-                               std::vector<std::size_t>& ppos,
-                               std::vector<std::size_t>& vpos,
-                               std::vector<std::size_t>& tpos)
-{
-    std::fill(ppos.begin(), ppos.end(), 0);
-    std::fill(vpos.begin(), vpos.end(), 0);
-    std::fill(tpos.begin(), tpos.end(), 0);
 
-    const std::size_t n = str.size();
-    std::size_t cur = 0;
-    while (cur < n) {
-        std::size_t m = str.find('M', cur);
-        if (m == std::string::npos) break;
-
-        // parse motor id number
-        std::size_t p = m + 1;
-        unsigned int num = 0;
-        bool has_digit = false;
-        while (p < n && std::isdigit(static_cast<unsigned char>(str[p]))) {
-            has_digit = true;
-            num = num * 10u + static_cast<unsigned int>(str[p] - '0');
-            ++p;
-        }
-
-        if (has_digit && num != 0 && num <= last_action_len) {
-            // find keys after this 'M#'
-            std::size_t pk = str.find("p:", m);
-            if (pk != std::string::npos) ppos[num] = pk + 2;
-            std::size_t vk = str.find("v:", m);
-            if (vk != std::string::npos) vpos[num] = vk + 2;
-            std::size_t tk = str.find("t:", m);
-            if (tk != std::string::npos) tpos[num] = tk + 2;
-        }
-        cur = p;
-    }
-}
-// ------- Cache IMU Values -------
-void Robot::cache_imu_values(const std::string& str,
-                             std::size_t& gx, std::size_t& gy, std::size_t& gz,
-                             std::size_t& pgx, std::size_t& pgy)
-{
-    std::size_t imu_base = str.rfind("IMU");
-    if (imu_base == std::string::npos) {
-        gx = gy = gz = pgx = pgy = pgz_in_mcu_str = 0;
-        return;
-    }
-
-    std::size_t pos;
-
-    pos = str.find("gx:", imu_base);  gx  = (pos == std::string::npos)  ? 0 : pos + 3;
-    pos = str.find("gy:", imu_base);  gy  = (pos == std::string::npos)  ? 0 : pos + 3;
-    pos = str.find("gz:", imu_base);  gz  = (pos == std::string::npos)  ? 0 : pos + 3;
-    pos = str.find("pgx:", imu_base); pgx = (pos == std::string::npos)  ? 0 : pos + 4;
-    pos = str.find("pgy:", imu_base); pgy = (pos == std::string::npos)  ? 0 : pos + 4;
-    pos = str.find("pgz:", imu_base); pgz_in_mcu_str = (pos == std::string::npos) ? 0 : pos + 4;
-    
-}
-// ------- Cache STATUS Values -------
-void Robot::cache_status_values(const std::string& status_str,
-                                std::vector<std::size_t>& patt_vec,
-                                std::size_t& emergency_pos)
-{
-    for (auto id : motor_ids) {
-        const std::string mid = "M" + std::to_string(id) + ":";
-        std::size_t base = status_str.find(mid);
-        std::size_t kpos = status_str.find("pattern:", base);
-        patt_vec[id] = kpos + 8;  
-    }
-    std::size_t epos = status_str.find("EMERGENCY:");
-    emergency_pos = epos + 10;   
-}
 // ------- Parse Observation -------
-std::unordered_map<std::string, std::vector<float>>& Robot::parse_obs(const std::string& mcu_str) {
-    std::cout << mcu_str << std::endl;
-    if (!check_mcu(mcu_str, motor_ids)) {
+std::unordered_map<std::string, std::vector<float>>& Robot::parse_obs(const FxCliMap& mcu_obs) {
+    // 1) ACK / REQ check
+    if (auto it_ack = mcu_obs.find("ACK"); it_ack != mcu_obs.end()) {
+        const auto& ack = it_ack->second;
+        auto it = ack.find("REQ");
+        if (!(it != ack.end() && it->second == "true")) {
+            ++cli_missed_req;
+            return obs;
+        }
+    }
+    else{
+        ++cli_missed_req;
         return obs;
     }
-    auto& dof_pos   = obs["dof_pos"]; // 6
-    auto& dof_vel   = obs["dof_vel"]; // 8
-    auto& ang_vel   = obs["ang_vel"];
-    auto& proj_grav = obs["proj_grav"];
-    
-    // 위치: M1..M6 -> dof_pos[0..5]
+
+    // 2) Get references to observation vectors
+    auto& dof_pos   = obs.at("dof_pos");   // size: 6
+    auto& dof_vel   = obs.at("dof_vel");   // size: 8
+    auto& ang_vel   = obs.at("ang_vel");   // size: 3
+    auto& proj_grav = obs.at("proj_grav"); // size: 3
+
+    // Helper: get motor map M1..M8
+    auto get_motor = [&](int index)
+        -> const std::unordered_map<std::string, std::string>*
+    {
+        std::string key = "M" + std::to_string(index); // "M1", "M2", ...
+        auto it = mcu_obs.find(key);
+        if (it == mcu_obs.end()) {
+            return nullptr;
+        }
+        return &it->second;
+    };
+
+    // 3) Parse M1..M6 (leg joints: position + velocity)
     for (int i = 0; i < 6; ++i) {
         int mid = i + 1; // 1..6
-        std::size_t pstart = p_in_mcu_str[mid];
-        float val = std::stof(mcu_str.substr(pstart));
-        dof_pos[i] = val + pos_offset[joint_names[i]];
+        const auto* m = get_motor(mid);
+        if (!m) {
+            ++cli_missed_req;
+            return obs;
+        }
+
+        auto it_p = m->find("p");
+        auto it_v = m->find("v");
+        if (it_p == m->end() || it_v == m->end()) {
+            ++cli_missed_req;
+            return obs;
+        }
+        if (it_p->second == "N" || it_v->second == "N") {
+            ++cli_missed_req;
+            return obs;
+        }
+        float p = std::stof(it_p->second);
+        float v = std::stof(it_v->second);
+
+        // Apply joint offset
+        const std::string& jname = joint_names[i];
+        float off = pos_offset[jname];
+
+        dof_pos[i] = p + off;
+        dof_vel[i] = v;
+    }
+    // 4) Parse M7..M8 (wheel motors: velocity only)
+    for (int i = 6; i < 8; ++i) {
+        int mid = i + 1; // 7, 8
+        const auto* m = get_motor(mid);
+        if (!m) {
+            ++cli_missed_req;
+            return obs;
+        }
+
+        auto it_v = m->find("v");
+        if (it_v == m->end() || it_v->second == "N") {
+            ++cli_missed_req;
+            return obs;
+        }
+        float v = std::stof(it_v->second);
+        dof_vel[i] = v;
     }
 
-    // 속도: M1..M8 -> dof_vel[0..7]
-    for (int i = 0; i < 8; ++i) {
-        int mid = i + 1; // 1..8
-        std::size_t vstart = v_in_mcu_str[mid];
-        float val = std::stof(mcu_str.substr(vstart));
-        dof_vel[i] = val;
+    // 5) Parse IMU
+    auto it_imu = mcu_obs.find("IMU");
+    if (it_imu == mcu_obs.end()) {
+        ++cli_missed_req;
+        return obs;
     }
 
-    // IMU 
-    ang_vel[0]   = std::stof(mcu_str.substr(gx_in_mcu_str));
-    ang_vel[1]   = std::stof(mcu_str.substr(gy_in_mcu_str));
-    ang_vel[2]   = std::stof(mcu_str.substr(gz_in_mcu_str));
-    proj_grav[0] = std::stof(mcu_str.substr(pgx_in_mcu_str));
-    proj_grav[1] = std::stof(mcu_str.substr(pgy_in_mcu_str));
-    proj_grav[2] = std::stof(mcu_str.substr(pgz_in_mcu_str));
-    
+    const auto& imu = it_imu->second;
+    auto get_imu = [&](const char* key, float& out) -> bool {
+        auto it = imu.find(key);
+        if (it == imu.end() || it->second == "N")
+            return false;
+        out = std::stof(it->second);
+        return true;
+    };
+
+    float gx, gy, gz, pgx, pgy, pgz;
+    if (!get_imu("gx", gx)  ||
+        !get_imu("gy", gy)  ||
+        !get_imu("gz", gz)  ||
+        !get_imu("pgx", pgx)||
+        !get_imu("pgy", pgy)||
+        !get_imu("pgz", pgz))
+    {
+        ++cli_missed_req;
+        return obs;
+    }
+
+    ang_vel[0]   = gx;
+    ang_vel[1]   = gy;
+    ang_vel[2]   = gz;
+    proj_grav[0] = pgx;
+    proj_grav[1] = pgy;
+    proj_grav[2] = pgz;
+
+    cli_missed_req = 0;
     return obs;
 }
+
 // ------- Get Observation -------
 std::unordered_map<std::string, std::vector<float>> Robot::get_obs() {
-    std::string mcu_str = cli.req(motor_ids);
-    auto& parsed = parse_obs(mcu_str);
+    do_action(last_action, last_torque_ctrl, false);
+    FxCliMap mcu_obs = cli.req(motor_ids);
+    auto& parsed = parse_obs(mcu_obs);
     return parsed;
 }
+
 // ------- Do Action -------
-void Robot::do_action(const std::vector<float>& action, bool torque_ctrl) {
-    if (!gains_set)
-        throw RobotSetGainsError("Robot's kp and kd must be provided before do_action.");
+void Robot::do_action(const std::vector<float>& action, bool torque_ctrl, bool safe) {
     if (action.size() != last_action_len)
         estop("action length mismatch.");
 
@@ -290,7 +256,10 @@ void Robot::do_action(const std::vector<float>& action, bool torque_ctrl) {
 
     if (torque_ctrl) {
         tau = action;
-    } else {
+    }
+    else {
+        if (!gains_set)
+        throw RobotSetGainsError("Robot's kp and kd must be provided before do_action.");
         //  - 0..5  : 다리 6관절 위치 제어
         //  - 6..7  : 바퀴 속도 제어
         for (size_t i = 0; i < last_action_len; ++i) {
@@ -318,114 +287,163 @@ void Robot::do_action(const std::vector<float>& action, bool torque_ctrl) {
         slice(kp_,  0, 8), slice(kd_,  0, 8),
         slice(tau, 0, 8)
     );
+
+    last_action = action;
+    last_torque_ctrl = torque_ctrl;
     
-    check_safety();
-}
-// Check MCU Data
-bool Robot::check_mcu(const std::string& mcu_str, const std::vector<uint8_t>& mids) {
-    if (mcu_str.find("OK <REQ>") == std::string::npos) {
-        cli_missed_req += 1;
-        return false;
+    if(safe){
+        check_safety(0.175f, 0.261f, 6.28f, 7.85f);  // 10 deg. 15 deg. 2pi/s 2.5pi/s 
     }
-    cache_motor_values(mcu_str, p_in_mcu_str, v_in_mcu_str, t_in_mcu_str);
-    cache_imu_values  (mcu_str, gx_in_mcu_str, gy_in_mcu_str, gz_in_mcu_str, pgx_in_mcu_str, pgy_in_mcu_str);
-
-    for (std::size_t id : mids) {
-        if (id == 0 || id > last_action_len) { cli_missed_req += 1; return false; }
-        if (mcu_str[p_in_mcu_str[id]] == 'N') { cli_missed_req += 1; return false; }
-        if (mcu_str[v_in_mcu_str[id]] == 'N') { cli_missed_req += 1; return false; }
-        if (mcu_str[t_in_mcu_str[id]] == 'N') { cli_missed_req += 1; return false; }
-    }
-    if (mcu_str[gx_in_mcu_str]  == 'N') { cli_missed_req += 1; return false; }
-    if (mcu_str[gy_in_mcu_str]  == 'N') { cli_missed_req += 1; return false; }
-    if (mcu_str[gz_in_mcu_str]  == 'N') { cli_missed_req += 1; return false; }
-    if (mcu_str[pgx_in_mcu_str] == 'N') { cli_missed_req += 1; return false; }
-    if (mcu_str[pgy_in_mcu_str] == 'N') { cli_missed_req += 1; return false; }
-    if (mcu_str[pgz_in_mcu_str] == 'N') { cli_missed_req += 1; return false; }
-
-    return true;
 }
+
 // Check STATUS Data
-std::pair<bool,bool> Robot::check_status(const std::string& status_str, const std::vector<uint8_t>& mids) {
-    bool disconn_flag = false;
+std::pair<bool, bool> Robot::check_status(const FxCliMap& status,
+                                          const std::vector<uint8_t>& mids)
+{
+    bool disconn_flag   = false;
     bool emergency_flag = false;
 
-    if (status_str.find("OK <STATUS>") == std::string::npos) {
-        disconn_flag = true;
-    } else {
-        cache_status_values(status_str, patt_in_status_str, emergency_in_status_str);
-        for (auto id : mids) {
-            std::size_t idx = patt_in_status_str[id];
-            char c0 = status_str[idx];        
-            if (!std::isdigit(static_cast<unsigned char>(c0))) { disconn_flag = true; break; }
-            int pattern = std::stoi(status_str.substr(idx));
-            if (pattern != 2) { disconn_flag = true; break; }
+    // 1) EMERGENCY 플래그 체크
+    auto it_emg = status.find("EMERGENCY");
+    if (it_emg != status.end()) {
+        const auto& emg = it_emg->second;
+        auto it_val = emg.find("value");
+        if (it_val != emg.end() && it_val->second == "ON") {
+            emergency_flag = true;
         }
-        emergency_flag = (status_str.substr(emergency_in_status_str, 2) == "ON");
+    }
+    // 2) ACK / STATUS 체크  
+    auto it_ack = status.find("ACK");
+    if (it_ack == status.end()) {
+        disconn_flag = true;
+        return {disconn_flag, emergency_flag};
+    }
+    const auto& ack = it_ack->second;
+    auto it_status = ack.find("STATUS");
+    if (it_status == ack.end() || it_status->second != "true") {
+        disconn_flag = true;
+        return {disconn_flag, emergency_flag};
+    }
+    // 3) 각 모터 M1..Mn pattern / err 체크
+    for (auto id : mids) {
+        std::string key = "M" + std::to_string(id);  // "M1", "M2", ...
+        auto it_m = status.find(key);
+        if (it_m == status.end()) {
+            disconn_flag = true;
+            break;
+        }
+        const auto& m = it_m->second;
+        auto it_pattern = m.find("pattern");
+        // pattern 없거나, "2"가 아니면 비정상
+        if (it_pattern == m.end() || it_pattern->second != "2") {
+            disconn_flag = true;
+            break;
+        }
+        auto it_err = m.find("err");
+        if (it_err != m.end() && it_err->second != "None") {
+            disconn_flag = true;
+            break;
+        }
     }
     return {disconn_flag, emergency_flag};
 }
+
 // ------- Check Saftey -------
-void Robot::check_safety() { 
-    std::string status_str = cli.status();
-    auto [dis, emg] = check_status(status_str, motor_ids); 
+void Robot::check_safety(float POS_SAFETY_MARGIN_RAD,
+                         float POS_MARGIN_NEAR_LIMIT_RAD,
+                         float VEL_THRESHOLD_NEAR_LIMIT_RAD_S,
+                         float VEL_HARD_LIMIT_RAD_S) { 
+
+    FxCliMap status = cli.status();
+    auto [dis, emg] = check_status(status, motor_ids); 
 
     bool disconn_flag = dis;
     bool emergency_flag = emg;
 
+    constexpr int kCliPeriodMs = 20;
+
     if (!disconn_flag) cli_disconn_duration_ms = 0;
-    else cli_disconn_duration_ms += 20;
+    else cli_disconn_duration_ms += kCliPeriodMs;
+                       
+    if (emergency_flag)
+        throw RobotEStopError("E-stop: Emergency button triggered");  // TODO: change
 
-    if (emergency_flag || std::max(cli_disconn_duration_ms, cli_missed_req * 20) >= cli_disconn_timeout_ms)
-        throw RobotEStopError("E-stop: connection timeout or emergency flag reported");
+    if (cli_disconn_duration_ms >= cli_disconn_timeout_ms)
+        throw RobotEStopError("E-stop: FxClient connection timeout");
 
-    check_obs(obs);
-}
-// ------- Check Obs -------
-void Robot::check_obs(const std::unordered_map<std::string, std::vector<float>>& obs) {  
-    const auto& q_obs = obs.at("dof_pos"); // 6
-    const auto& q_vel = obs.at("dof_vel"); // 8
+    if (cli_missed_req * kCliPeriodMs >= cli_disconn_timeout_ms)
+        throw RobotEStopError("E-stop: Request miss timeout");
 
-    const float pos_margin = 0.1745f; // 10 deg
-    const float vel_margin = 0.3491f; // 20 deg
-    const float vel_th = 8.7275f; // rad/s
+    // Positions: 6 joints (legs), Velocities: 8 joints (legs + wheels)
+    const auto& joint_pos_vec = obs.at("dof_pos"); // size: 6
+    const auto& joint_vel_vec = obs.at("dof_vel"); // size: 8
 
-    for (size_t i=0;i<joint_names.size();++i) {
-        const std::string& name = joint_names[i];
+    for (size_t i = 0; i < joint_names.size(); ++i) {
+        const std::string& joint_name = joint_names[i];
 
-        float pos = q_obs.at(i);
-        float vel = q_vel.at(i);
+        const float joint_pos = joint_pos_vec.at(i);
+        const float joint_vel = joint_vel_vec.at(i); // same index ordering assumed
 
-        float lo_pos = rel_min_pos.at(name) + pos_margin;
-        float hi_pos = rel_max_pos.at(name) - pos_margin;
+        const float lower_safe_pos = rel_min_pos.at(joint_name) + POS_SAFETY_MARGIN_RAD;
+        const float upper_safe_pos = rel_max_pos.at(joint_name) - POS_SAFETY_MARGIN_RAD;
 
-        if (pos < lo_pos || pos > hi_pos) {
-            std::ostringstream oss; oss<<std::fixed<<std::setprecision(3);
-            oss << "E-stop: position limit exceeded on " << name
-                << " (pos=" << pos << " rad, allowed [" << lo_pos << ", " << hi_pos << "])";
-            estop(oss.str()); 
+        // 1) Position hard limit
+        if (joint_pos < lower_safe_pos || joint_pos > upper_safe_pos) {
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(3);
+            oss << "E-stop: position limit exceeded on " << joint_name
+                << " (pos=" << joint_pos << " rad, allowed ["
+                << lower_safe_pos << ", " << upper_safe_pos << "])";
+            estop(oss.str());
         }
-        if (pos < lo_pos + vel_margin && vel < -vel_th) {
-            std::ostringstream oss; oss<<std::fixed<<std::setprecision(3);
-            oss << "E-stop: excessive negative velocity near lower limit on " << name
-                << " (pos=" << pos << " rad, vel=" << vel << " rad/s)";
-            estop(oss.str());  
+
+        // 2) Global velocity hard limit
+        if (std::fabs(joint_vel) > VEL_HARD_LIMIT_RAD_S) {
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(3);
+            oss << "E-stop: velocity limit exceeded on " << joint_name
+                << " (vel=" << joint_vel << " rad/s, limit="
+                << VEL_HARD_LIMIT_RAD_S << " rad/s)";
+            estop(oss.str());
         }
-        if (pos >= hi_pos - vel_margin && vel > vel_th) {
-            std::ostringstream oss; oss<<std::fixed<<std::setprecision(3);
-            oss << "E-stop: excessive positive velocity near upper limit on " << name
-                << " (pos=" << pos << " rad, vel=" << vel << " rad/s)";
-            estop(oss.str()); 
+
+        // 3) Too fast toward lower limit (리미트 근처 위치 + 음의 큰 속도)
+        if (joint_pos <= lower_safe_pos + POS_MARGIN_NEAR_LIMIT_RAD &&
+            joint_vel < -VEL_THRESHOLD_NEAR_LIMIT_RAD_S) {
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(3);
+            oss << "E-stop: excessive negative velocity near lower limit on "
+                << joint_name
+                << " (pos=" << joint_pos << " rad, vel=" << joint_vel << " rad/s)";
+            estop(oss.str());
+        }
+
+        // 4) Too fast toward upper limit (리미트 근처 위치 + 양의 큰 속도)
+        if (joint_pos >= upper_safe_pos - POS_MARGIN_NEAR_LIMIT_RAD &&
+            joint_vel > VEL_THRESHOLD_NEAR_LIMIT_RAD_S) {
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(3);
+            oss << "E-stop: excessive positive velocity near upper limit on "
+                << joint_name
+                << " (pos=" << joint_pos << " rad, vel=" << joint_vel << " rad/s)";
+            estop(oss.str());
         }
     }
 }
+
 // ------- E-Stop API -------
 [[noreturn]] void Robot::estop(const std::string& msg) {
-    const auto retry = std::chrono::milliseconds(10);
+    std::vector<float> estop_action(last_action_len, 0.0f);
+    do_action(estop_action, true, false);
+
+    const auto retry = std::chrono::milliseconds(1);
     for (;;) {
         bool ok = cli.motor_estop(motor_ids); 
         if (ok) break;
-        std::this_thread::sleep_for(retry);
+        else{
+            do_action(estop_action, true, false);  // double check
+            std::this_thread::sleep_for(retry);
+        }
     }
     throw RobotEStopError(msg.empty() ? "E-stop triggered" : msg);
 }

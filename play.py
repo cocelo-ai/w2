@@ -1,8 +1,13 @@
 from sdk import *
 
 # Robot's Gains
-kp = [100, 100, 100, 100, 120, 120, 0, 0]
-kd = [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 0.7, 0.7]
+#kp = [70, 70, 70, 70, 70, 70, 0, 0]
+#kd = [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.55, 0.55]
+
+div_coef = 16.0
+
+kp = [70/div_coef, 70/div_coef, 70/div_coef, 70/div_coef, 70/div_coef, 70/div_coef, 0, 0]
+kd = [0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.55/div_coef, 0.55/div_coef]
 
 # RL mode
 mode = Mode(mode_cfg={
@@ -11,8 +16,9 @@ mode = Mode(mode_cfg={
     "non_stacked_obs_order": ["command"],
     "obs_scale": {"dof_vel": 0.15,
                   "ang_vel": 0.25,
-                  "command": [2.0, 1.0, 0.25, 1.0]},
-    "action_scale": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 20.0, 20.0],
+                  "command": [2.0, 0.0, 0.25, 0.0],
+                  },
+    "action_scale": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 40.0, 40.0],
     "stack_size": 3,
     "policy_path": "weight/policy.onnx",
     "cmd_vector_length": 4,
@@ -37,10 +43,40 @@ rl.set_mode(mode_id=1)
 def loop():
     obs = robot.get_obs()             # Get observation
     cmd = joystick.get_cmd()          # Get command
-    print(obs["dof_pos"])
     state = rl.build_state(obs, cmd)  # Build state
     action = rl.select_action(state)  # Select action
-    #robot.do_action(action)           # Do action
+    robot.do_action(action)
+    
+    '''
+    dof_pos = obs["dof_pos"]
+    dof_vel = obs["dof_vel"]
+    kp_vec, kd_vec = robot.get_gains()
 
+    tau = [0.0] * 8
+
+    # ----- 0~5: position target -----
+    # action[i] = q_des (관절 목표 각도, rad)
+    for i in range(6):
+        q_cur = dof_pos[i]
+        qd_cur = dof_vel[i]
+        q_des = action[i]        # 이미 [-0.5,0.5] 범위로 스케일된 값이라고 가정
+
+        pos_err = q_des - q_cur
+        # 표준 PD: tau = Kp * (q_des - q) - Kd * qd
+        tau[i] = kp_vec[i] * pos_err - kd_vec[i] * qd_cur
+
+    # ----- 6~7: wheel velocity target -----
+    # action[i] = v_des (바퀴 목표 속도, rad/s)
+    for i in range(6, 8):
+        v_cur = dof_vel[i]
+        v_des = action[i]        # [-40, 40] rad/s 범위
+        vel_err = v_des - v_cur
+
+        # 단순 속도 제어: tau = Kd * (v_des - v_cur)
+        # (kp[6], kp[7] = 0 이라 purely D control)
+        tau[i] = kd_vec[i] * vel_err
+
+    robot.do_action(tau, torque_ctrl=True)           # Do action
+    '''
+    
 loop()
-

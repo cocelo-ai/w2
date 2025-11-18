@@ -53,22 +53,24 @@ def control_rate(robot: Robot,
 
             except RobotAPIError:
                 logger.info("Escape control loop due to robot API (e.g., sleep)")
+                # Do something
                 return
             except RobotEStopError as e:
                 logger.critical(f"E-stop flag is activated: {e}\n{traceback.format_exc()}")
-                #robot.estop()
+                robot.estop()
                 return
             except KeyboardInterrupt:
                 logger.critical("Control loop interrupted by user (KeyboardInterrupt).")
+                robot.do_action([0] * 8, torque_ctrl=True)
                 #robot.estop()
                 return
             except Exception as e:
                 logger.critical(f"Exception in control loop: {e}\n{traceback.format_exc()}")
-                #robot.estop()
+                robot.estop()
                 return
             except BaseException as e:
                 logger.critical(f"Exception in control loop: {e}\n{traceback.format_exc()}")
-                #robot.estop()
+                robot.estop()
                 return
         return runner
     return decorator

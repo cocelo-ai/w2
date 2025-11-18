@@ -32,7 +32,7 @@ PYBIND11_MODULE(robot, m) {
                      }
                  }
                  std::vector<float> a = action.cast<std::vector<float>>();
-                 self.do_action(a, torque_ctrl);
+                 self.do_action(a, torque_ctrl, true);
              },
              py::arg("action"), py::arg("torque_ctrl") = false)
 

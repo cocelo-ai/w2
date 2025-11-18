@@ -29,7 +29,7 @@ std::unordered_map<std::string, std::size_t> get_obs_to_length_map() {
         {"proj_grav", 3},
         {"last_action", 8},
         {"height_map", 144},
-        {"command", 0} // 생성자에서 cmd_vector_length로 갱신
+        {"command", 0}
     };
 }
 
@@ -165,7 +165,6 @@ Mode::Mode(const ModeConfig& cfg)
         }
         // 더미 상태로 길이 검증
         std::vector<float> dummy(static_cast<std::size_t>(state_len_), 0.0f);
-        apply_scales_inplace(dummy);
         auto out = policy_->inference(dummy);
         if (out.size() != last_action_len_) {
             std::ostringstream oss;
@@ -198,86 +197,13 @@ void Mode::compute_state_layout_() {
     state_len_ = total;
 }
 
-void Mode::set_policy(std::shared_ptr<IPolicy> policy) {
-    policy_ = std::move(policy);
-    if (!policy_) {
-        throw ModeConfigError("policy must not be null");
-    }
-    // 더미 상태로 길이 검증
-    std::vector<float> dummy(static_cast<std::size_t>(state_len_), 0.0f);
-    apply_scales_inplace(dummy);
-    auto out = policy_->inference(dummy);
-    if (out.size() != last_action_len_) {
+std::vector<float> Mode::inference(const std::vector<float>& state1d) {
+    if (state1d.size() != state_len_) {
         std::ostringstream oss;
-        oss << "Policy 'inference' output length mismatch: got " << out.size()
-            << ", expected " << last_action_len_ << " ('last_action' length)";
-        throw ModeConfigError(oss.str());
-    }
-}
-
-void Mode::apply_scales_inplace(std::vector<float>& state) const {
-    if (state.size() != state_len_) {
-        throw std::runtime_error("apply_scales_inplace: state length mismatch");
-    }
-    std::size_t offset = 0;
-
-    // stacked: 각 obs 블록이 stack_size 번 반복된 순서로 들어왔다고 가정
-    for (const auto& k : stacked_obs_order_) {
-        const std::size_t len = obs_to_length_.at(k);
-        auto itScale = obs_scale_norm_.find(k);
-        const std::vector<float>* scale_ptr = nullptr;
-        if (itScale != obs_scale_norm_.end()) scale_ptr = &itScale->second;
-
-        std::vector<float> ones;
-        if (!scale_ptr) { ones.assign(len, 1.0f); scale_ptr = &ones; }
-
-        for (int s = 0; s < stack_size_; ++s) {
-            for (std::size_t i = 0; i < len; ++i) {
-                state[offset + i] *= (*scale_ptr)[i];
-            }
-            offset += len;
-        }
-    }
-
-    // non-stacked
-    for (const auto& k : non_stacked_obs_order_) {
-        const std::size_t len = obs_to_length_.at(k);
-        auto itScale = obs_scale_norm_.find(k);
-        const std::vector<float>* scale_ptr = nullptr;
-        if (itScale != obs_scale_norm_.end()) scale_ptr = &itScale->second;
-        std::vector<float> ones;
-        if (!scale_ptr) { ones.assign(len, 1.0f); scale_ptr = &ones; }
-        for (std::size_t i = 0; i < len; ++i) {
-            state[offset + i] *= (*scale_ptr)[i];
-        }
-        offset += len;
-    }
-}
-
-std::vector<float> Mode::inference(const std::vector<float>& obs1d) {
-    if (!policy_) {
-        throw ModeConfigError("policy is not set (should be auto-initialized in constructor)");
-    }
-    if (obs1d.size() != state_len_) {
-        std::ostringstream oss;
-        oss << "state length mismatch: got " << obs1d.size() << ", expected " << state_len_;
+        oss << "state length mismatch: got " << state1d.size() << ", expected " << state_len_;
         throw std::runtime_error(oss.str());
     }
-
-    // 스케일 적용
-    std::vector<float> state = obs1d;
-    apply_scales_inplace(state);
-
-    // 정책 호출 (float-only)
-    std::vector<float> action = policy_->inference(state);
-
-    // 액션 길이 체크
-    if (action.size() != action_scale_.size()) {
-        std::ostringstream oss;
-        oss << "policy action length mismatch: got " << action.size()
-            << ", expected " << action_scale_.size();
-        throw std::runtime_error(oss.str());
-    }
+    std::vector<float> action = policy_->inference(state1d);
 
     return action;
 }
