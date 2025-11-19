@@ -3,7 +3,8 @@ from functools import wraps
 import traceback
 
 from sdk import *
-from sdk.core.exceptions import *
+from sdk.classes.robot.robot import RobotEStopError
+from sdk.core.exceptions import JoystickEstopError, JoystickAPIError
 
 def control_rate(robot: Robot,
                 hz: float = 50.0,
@@ -29,7 +30,7 @@ def control_rate(robot: Robot,
                 next_tick = start_call_ns + period_ns
                 while True:
                     cnt += 1
-
+ 
                     loop_func(*args, **kwargs)
 
                     now = time.monotonic_ns()
@@ -51,25 +52,20 @@ def control_rate(robot: Robot,
 
                     next_tick += period_ns
 
-            except RobotAPIError:
-                logger.info("Escape control loop due to robot API (e.g., sleep)")
-                # Do something
-                return
-            except RobotEStopError as e:
-                logger.critical(f"E-stop flag is activated: {e}\n{traceback.format_exc()}")
-                robot.estop()
-                return
-            except KeyboardInterrupt:
+            except KeyboardInterrupt as e:
                 logger.critical("Control loop interrupted by user (KeyboardInterrupt).")
                 robot.do_action([0] * 8, torque_ctrl=True)
-                #robot.estop()
+                #robot.estop()  # TODO: Activate estop()
+                return
+            except RobotEStopError as e:
+                logger.critical(f"{e}")
                 return
             except Exception as e:
-                logger.critical(f"Exception in control loop: {e}\n{traceback.format_exc()}")
+                logger.critical(f"{e}\n{traceback.format_exc()}")
                 robot.estop()
                 return
             except BaseException as e:
-                logger.critical(f"Exception in control loop: {e}\n{traceback.format_exc()}")
+                logger.critical(f"{e}\n{traceback.format_exc()}")
                 robot.estop()
                 return
         return runner

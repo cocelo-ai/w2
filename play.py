@@ -4,7 +4,7 @@ from sdk import *
 #kp = [70, 70, 70, 70, 70, 70, 0, 0]
 #kd = [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.55, 0.55]
 
-div_coef = 16.0
+div_coef = 16
 
 kp = [70/div_coef, 70/div_coef, 70/div_coef, 70/div_coef, 70/div_coef, 70/div_coef, 0, 0]
 kd = [0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.7/div_coef, 0.55/div_coef, 0.55/div_coef]
@@ -46,6 +46,7 @@ def loop():
     state = rl.build_state(obs, cmd)  # Build state
     action = rl.select_action(state)  # Select action
     robot.do_action(action)
+    #robot.do_action([0]*8, torque_ctrl=True)
     
     '''
     dof_pos = obs["dof_pos"]

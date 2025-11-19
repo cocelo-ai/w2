@@ -18,7 +18,7 @@ class Logger:
         LOG_LEVEL = "DEBUG"
         MAX_NUM_LOG = 20
 
-        VERBOSE = True
+        VERBOSE = False
         SAVE_DATA = False
         SAVE_DATA_FILENAME = "dataset_250525_4.csv"
         SAVE_FREQ = 100

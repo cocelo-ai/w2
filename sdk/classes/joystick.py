@@ -5,7 +5,7 @@ import time
 import glob
 
 from evdev import InputDevice, ecodes
-from sdk.core.exceptions import RobotEStopError, RobotAPIError
+from sdk.core.exceptions import JoystickEstopError, JoystickAPIError
 
 
 class Joystick:
@@ -208,9 +208,9 @@ class Joystick:
         self._update_wake_flag()
 
         if self.estop_flag:
-            raise RobotEStopError("E-stop triggered by joystick input.")
+            raise JoystickEstopError("E-stop triggered by joystick input.")
 
         if self.sleep_flag:
-            raise RobotAPIError("Sleep triggered by joystick input.")
+            raise JoystickAPIError("Sleep triggered by joystick input.")
 
         return {"cmd_vector": self.robot_cmd, "mode_id": self.mode_id, "estop": self.estop_flag, "wake": self.wake_flag, "sleep": self.sleep_flag}

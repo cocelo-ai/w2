@@ -35,7 +35,7 @@ public:
     void do_action(const std::vector<float>& action, bool torque_ctrl, bool safe);
 
     // ------- E-Stop API  -------
-    [[noreturn]] void estop(const std::string& msg = std::string());
+    [[noreturn]] void estop(const std::string& msg, bool is_physical_estop=false);
 
     // ======= Read-only getters for Python =======
     inline std::pair<std::vector<float>, std::vector<float>> get_gains() const {
@@ -53,7 +53,7 @@ private:
     // HW 준비 대기
     void wait(std::int32_t timeout_ms = 10000);
     std::unordered_map<std::string, std::vector<float>>& parse_obs(const FxCliMap& mcu_obs);
-    std::pair<bool,bool> check_status(const FxCliMap& status, const std::vector<uint8_t>& mids);
+    std::tuple<bool,bool,bool> check_status(const FxCliMap& status, const std::vector<uint8_t>& mids);
 
     const size_t last_action_len;
     std::vector<float> last_action;
@@ -63,13 +63,20 @@ private:
     std::vector<float> kd;
     bool gains_set;
 
-    // config / ids
+    // motor config
     std::vector<uint8_t> motor_ids;
+    std::vector<std::string> motor_pattern; 
+    std::vector<std::string> motor_err;
+
+    // battery config
+    std::string battery_voltage;
+    std::string battery_soc;     
 
     // conn state
-    int cli_disconn_timeout_ms;
-    int cli_disconn_duration_ms;
-    int cli_missed_req;
+    int max_disconn_count;  
+    int disconn_count;        
+    int max_req_miss_count;  
+    int req_miss_count;    
 
     // Obs container & properties
     std::unordered_map<std::string, std::vector<float>> obs;

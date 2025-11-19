@@ -37,7 +37,11 @@ PYBIND11_MODULE(robot, m) {
              py::arg("action"), py::arg("torque_ctrl") = false)
 
         .def("get_obs", &Robot::get_obs)
-        .def("estop", &Robot::estop, py::arg("msg") = std::string())
+        .def("estop",[](Robot& self, const std::string& msg) {
+            self.estop(msg, /*is_physical_estop=*/false);
+            },
+    py::arg("msg") = std::string()
+)
         .def("get_gains", &Robot::get_gains)
         .def_property_readonly("gains_set", &Robot::gains_ready)
         .def_property_readonly("last_action_len", &Robot::action_len);
