@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/mode
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/mode
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/mode
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/mode
 
 # Include any dependencies generated for this target.
 include CMakeFiles/mode.dir/depend.make
@@ -69,66 +69,66 @@ include CMakeFiles/mode.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mode.dir/flags.make
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o: CMakeFiles/mode.dir/flags.make
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o: /home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o: CMakeFiles/mode.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o -MF CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o.d -o CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o -c /home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o: CMakeFiles/mode.dir/flags.make
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o: /home/w2/w2/cpp/src/mode_bindings.cpp
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o: CMakeFiles/mode.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/w2/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o -MF CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o.d -o CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o -c /home/w2/w2/cpp/src/mode_bindings.cpp
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp > CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/w2/w2/cpp/src/mode_bindings.cpp > CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.i
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp -o CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/w2/w2/cpp/src/mode_bindings.cpp -o CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.s
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o: CMakeFiles/mode.dir/flags.make
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o: /home/flamingo_2w2l_light/w2/cpp/src/mode.cpp
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o: CMakeFiles/mode.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o -MF CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o.d -o CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o -c /home/flamingo_2w2l_light/w2/cpp/src/mode.cpp
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o: CMakeFiles/mode.dir/flags.make
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o: /home/w2/w2/cpp/src/mode.cpp
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o: CMakeFiles/mode.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/w2/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o -MF CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o.d -o CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o -c /home/w2/w2/cpp/src/mode.cpp
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/flamingo_2w2l_light/w2/cpp/src/mode.cpp > CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/w2/w2/cpp/src/mode.cpp > CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.i
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/flamingo_2w2l_light/w2/cpp/src/mode.cpp -o CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/w2/w2/cpp/src/mode.cpp -o CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.s
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o: CMakeFiles/mode.dir/flags.make
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o: /home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o: CMakeFiles/mode.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o -MF CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o.d -o CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o -c /home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o: CMakeFiles/mode.dir/flags.make
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o: /home/w2/w2/cpp/src/onnxpolicy.cpp
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o: CMakeFiles/mode.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/w2/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o -MF CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o.d -o CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o -c /home/w2/w2/cpp/src/onnxpolicy.cpp
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp > CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/w2/w2/cpp/src/onnxpolicy.cpp > CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.i
 
-CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp -o CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
+CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/w2/w2/cpp/src/onnxpolicy.cpp -o CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.s
 
 # Object files for target mode
 mode_OBJECTS = \
-"CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o" \
-"CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o" \
-"CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o"
+"CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o" \
+"CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o" \
+"CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o"
 
 # External object files for target mode
 mode_EXTERNAL_OBJECTS =
 
-mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o
-mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o
-mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
+mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o
+mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o
+mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o
 mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/build.make
-mode.cpython-310-aarch64-linux-gnu.so: /home/flamingo_2w2l_light/w2/cpp/onnxruntime/lib/libonnxruntime.so
+mode.cpython-310-aarch64-linux-gnu.so: /home/w2/w2/cpp/onnxruntime/lib/libonnxruntime.so
 mode.cpython-310-aarch64-linux-gnu.so: CMakeFiles/mode.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared module mode.cpython-310-aarch64-linux-gnu.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/w2/w2/sdk/classes/mode/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared module mode.cpython-310-aarch64-linux-gnu.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mode.dir/link.txt --verbose=$(VERBOSE)
-	/usr/bin/cmake -E copy_if_different /home/flamingo_2w2l_light/w2/cpp/onnxruntime/lib/libonnxruntime.so /home/flamingo_2w2l_light/w2/sdk/classes/mode
+	/usr/bin/cmake -E copy_if_different /home/w2/w2/cpp/onnxruntime/lib/libonnxruntime.so /home/w2/w2/sdk/classes/mode
 
 # Rule to build all files generated by this target.
 CMakeFiles/mode.dir/build: mode.cpython-310-aarch64-linux-gnu.so
@@ -139,6 +139,6 @@ CMakeFiles/mode.dir/clean:
 .PHONY : CMakeFiles/mode.dir/clean
 
 CMakeFiles/mode.dir/depend:
-	cd /home/flamingo_2w2l_light/w2/sdk/classes/mode && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/flamingo_2w2l_light/w2/sdk/classes/mode /home/flamingo_2w2l_light/w2/sdk/classes/mode /home/flamingo_2w2l_light/w2/sdk/classes/mode /home/flamingo_2w2l_light/w2/sdk/classes/mode /home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles/mode.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/w2/w2/sdk/classes/mode && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/w2/w2/sdk/classes/mode /home/w2/w2/sdk/classes/mode /home/w2/w2/sdk/classes/mode /home/w2/w2/sdk/classes/mode /home/w2/w2/sdk/classes/mode/CMakeFiles/mode.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/mode.dir/depend
 

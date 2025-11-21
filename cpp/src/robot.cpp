@@ -89,7 +89,7 @@ void Robot::wait(std::int32_t timeout_ms) {
             std::this_thread::sleep_for(retry_sleep);
             continue;
         }
-        if(bat) estop("\033[31m[E-stop]\033[0m Battery low");
+        if(bat) warn("\033[31m[E-stop]\033[0m Battery low");
 
         FxCliMap mcu_obs = cli.req(motor_ids);
         parse_obs(mcu_obs);
@@ -366,13 +366,13 @@ void Robot::check_safety(float POS_SAFETY_MARGIN_RAD,
         estop("\033[31m[E-stop]\033[0m Emergency stop button was pressed", /*is_physical_estop=*/true);
 
     if (disconn_count >= max_disconn_count)
-        estop("\033[31m[E-stop]\033[0m FxClient connection timeout");
+        warn("\033[31m[E-stop]\033[0m FxClient connection timeout");
 
     if (req_miss_count >= max_req_miss_count)
-        estop("\033[31m[E-stop]\033[0m FxClient request timeout");
+        warn("\033[31m[E-stop]\033[0m FxClient request timeout");
 
     if (battery_flag)
-        estop("\033[31m[E-stop]\033[0m Battery low");
+        warn("\033[31m[E-stop]\033[0m Battery low");
 
     // Positions: 6 joints (legs), Velocities: 8 joints (legs + wheels)
     const auto& joint_pos_vec = obs.at("dof_pos"); // size: 6
@@ -582,5 +582,31 @@ std::tuple<bool,bool,bool> Robot::check_status(const FxCliMap& status,
     estop_err_msg += print_motor_status();
     std::cout << estop_err_msg;
     throw RobotEStopError(estop_err_msg);
+}
+
+// ------- Warning API -------
+void Robot::warn(const std::string& msg) {
+    // debug
+    auto print_motor_status = [&]() -> std::string {
+        std::ostringstream oss;
+        oss << "\n\n====== Last observed robot status ======\n";
+        for (auto id : motor_ids) {
+            std::size_t idx = static_cast<std::size_t>(id - 1);
+            if (idx >= motor_pattern.size() || idx >= motor_err.size())
+                continue;
+            oss << "  M" << static_cast<int>(id)
+                << " | pattern: " << motor_pattern[idx]
+                << ", err: " << motor_err[idx] << "\n";
+        }
+        oss << "----------------------------------------\n";
+        oss << "  Battery Voltage: " << battery_voltage << " V\n";
+        oss << "  Battery SOC    : " << battery_soc     << " %\n";
+        oss << "========================================\n";
+        return oss.str();
+    };
+    std::string estop_err_msg = msg.empty() ? "\033[31m[E-stop]\033[0m" : msg;
+    estop_err_msg += print_motor_status();
+    std::cout << estop_err_msg;
+
 }
 } // namespace robot

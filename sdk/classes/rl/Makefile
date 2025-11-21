@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/rl
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/rl
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/rl
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/rl
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/rl/CMakeFiles /home/flamingo_2w2l_light/w2/sdk/classes/rl//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/rl/CMakeFiles /home/w2/w2/sdk/classes/rl//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/rl/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/rl/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,53 +129,53 @@ rl/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/build
 .PHONY : rl/fast
 
-home/flamingo_2w2l_light/w2/cpp/src/rl.o: home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl.o
+home/w2/w2/cpp/src/rl.o: home/w2/w2/cpp/src/rl.cpp.o
+.PHONY : home/w2/w2/cpp/src/rl.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.o
+home/w2/w2/cpp/src/rl.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl.cpp.o
+.PHONY : home/w2/w2/cpp/src/rl.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/rl.i: home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl.i
+home/w2/w2/cpp/src/rl.i: home/w2/w2/cpp/src/rl.cpp.i
+.PHONY : home/w2/w2/cpp/src/rl.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.i
+home/w2/w2/cpp/src/rl.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl.cpp.i
+.PHONY : home/w2/w2/cpp/src/rl.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/rl.s: home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl.s
+home/w2/w2/cpp/src/rl.s: home/w2/w2/cpp/src/rl.cpp.s
+.PHONY : home/w2/w2/cpp/src/rl.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.s
+home/w2/w2/cpp/src/rl.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl.cpp.s
+.PHONY : home/w2/w2/cpp/src/rl.cpp.s
 
-home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.o: home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.o
+home/w2/w2/cpp/src/rl_bindings.o: home/w2/w2/cpp/src/rl_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/rl_bindings.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.o
+home/w2/w2/cpp/src/rl_bindings.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/rl_bindings.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.i: home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.i
+home/w2/w2/cpp/src/rl_bindings.i: home/w2/w2/cpp/src/rl_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/rl_bindings.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.i
+home/w2/w2/cpp/src/rl_bindings.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/rl_bindings.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.s: home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.s
+home/w2/w2/cpp/src/rl_bindings.s: home/w2/w2/cpp/src/rl_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/rl_bindings.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.s
+home/w2/w2/cpp/src/rl_bindings.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rl.dir/build.make CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/rl_bindings.cpp.s
 
 # Help Target
 help:
@@ -186,12 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... rl"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/rl.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/rl.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/rl.s"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.s"
+	@echo "... home/w2/w2/cpp/src/rl.o"
+	@echo "... home/w2/w2/cpp/src/rl.i"
+	@echo "... home/w2/w2/cpp/src/rl.s"
+	@echo "... home/w2/w2/cpp/src/rl_bindings.o"
+	@echo "... home/w2/w2/cpp/src/rl_bindings.i"
+	@echo "... home/w2/w2/cpp/src/rl_bindings.s"
 .PHONY : help
 
 

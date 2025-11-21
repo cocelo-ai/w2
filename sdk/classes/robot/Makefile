@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/robot
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/robot
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/robot
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/robot
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles /home/flamingo_2w2l_light/w2/sdk/classes/robot//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/robot/CMakeFiles /home/w2/w2/sdk/classes/robot//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/robot/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,53 +129,53 @@ robot/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/build
 .PHONY : robot/fast
 
-home/flamingo_2w2l_light/w2/cpp/src/robot.o: home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot.o
+home/w2/w2/cpp/src/robot.o: home/w2/w2/cpp/src/robot.cpp.o
+.PHONY : home/w2/w2/cpp/src/robot.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o
+home/w2/w2/cpp/src/robot.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o
+.PHONY : home/w2/w2/cpp/src/robot.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/robot.i: home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot.i
+home/w2/w2/cpp/src/robot.i: home/w2/w2/cpp/src/robot.cpp.i
+.PHONY : home/w2/w2/cpp/src/robot.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i
+home/w2/w2/cpp/src/robot.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.i
+.PHONY : home/w2/w2/cpp/src/robot.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/robot.s: home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot.s
+home/w2/w2/cpp/src/robot.s: home/w2/w2/cpp/src/robot.cpp.s
+.PHONY : home/w2/w2/cpp/src/robot.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s
+home/w2/w2/cpp/src/robot.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.s
+.PHONY : home/w2/w2/cpp/src/robot.cpp.s
 
-home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.o: home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.o
+home/w2/w2/cpp/src/robot_bindings.o: home/w2/w2/cpp/src/robot_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/robot_bindings.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o
+home/w2/w2/cpp/src/robot_bindings.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/robot_bindings.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.i: home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.i
+home/w2/w2/cpp/src/robot_bindings.i: home/w2/w2/cpp/src/robot_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/robot_bindings.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i
+home/w2/w2/cpp/src/robot_bindings.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/robot_bindings.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.s: home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.s
+home/w2/w2/cpp/src/robot_bindings.s: home/w2/w2/cpp/src/robot_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/robot_bindings.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s
+home/w2/w2/cpp/src/robot_bindings.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/robot_bindings.cpp.s
 
 # Help Target
 help:
@@ -186,12 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... robot"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/robot.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/robot.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/robot.s"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.s"
+	@echo "... home/w2/w2/cpp/src/robot.o"
+	@echo "... home/w2/w2/cpp/src/robot.i"
+	@echo "... home/w2/w2/cpp/src/robot.s"
+	@echo "... home/w2/w2/cpp/src/robot_bindings.o"
+	@echo "... home/w2/w2/cpp/src/robot_bindings.i"
+	@echo "... home/w2/w2/cpp/src/robot_bindings.s"
 .PHONY : help
 
 

@@ -1,5 +1,5 @@
-/home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles/robot.dir
-/home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles/edit_cache.dir
-/home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles/rebuild_cache.dir
-/home/flamingo_2w2l_light/w2/sdk/classes/robot/_deps/pybind11-build/CMakeFiles/edit_cache.dir
-/home/flamingo_2w2l_light/w2/sdk/classes/robot/_deps/pybind11-build/CMakeFiles/rebuild_cache.dir
+/home/w2/w2/sdk/classes/robot/CMakeFiles/robot.dir
+/home/w2/w2/sdk/classes/robot/CMakeFiles/edit_cache.dir
+/home/w2/w2/sdk/classes/robot/CMakeFiles/rebuild_cache.dir
+/home/w2/w2/sdk/classes/robot/_deps/pybind11-build/CMakeFiles/edit_cache.dir
+/home/w2/w2/sdk/classes/robot/_deps/pybind11-build/CMakeFiles/rebuild_cache.dir

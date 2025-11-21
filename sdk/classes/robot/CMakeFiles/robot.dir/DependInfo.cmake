@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp" "CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o" "gcc" "CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o.d"
-  "/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp" "CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o" "gcc" "CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o.d"
+  "/home/w2/w2/cpp/src/robot.cpp" "CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o" "gcc" "CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o.d"
+  "/home/w2/w2/cpp/src/robot_bindings.cpp" "CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o" "gcc" "CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o.d"
   )
 
 # Targets to which this target links.

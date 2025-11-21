@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/mode
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/mode
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/mode
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/mode
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles /home/flamingo_2w2l_light/w2/sdk/classes/mode//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/mode/CMakeFiles /home/w2/w2/sdk/classes/mode//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/mode/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,77 +129,77 @@ mode/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/build
 .PHONY : mode/fast
 
-home/flamingo_2w2l_light/w2/cpp/src/mode.o: home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode.o
+home/w2/w2/cpp/src/mode.o: home/w2/w2/cpp/src/mode.cpp.o
+.PHONY : home/w2/w2/cpp/src/mode.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.o
+home/w2/w2/cpp/src/mode.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.o
+.PHONY : home/w2/w2/cpp/src/mode.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/mode.i: home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode.i
+home/w2/w2/cpp/src/mode.i: home/w2/w2/cpp/src/mode.cpp.i
+.PHONY : home/w2/w2/cpp/src/mode.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.i
+home/w2/w2/cpp/src/mode.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.i
+.PHONY : home/w2/w2/cpp/src/mode.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/mode.s: home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode.s
+home/w2/w2/cpp/src/mode.s: home/w2/w2/cpp/src/mode.cpp.s
+.PHONY : home/w2/w2/cpp/src/mode.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode.cpp.s
+home/w2/w2/cpp/src/mode.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode.cpp.s
+.PHONY : home/w2/w2/cpp/src/mode.cpp.s
 
-home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.o: home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.o
+home/w2/w2/cpp/src/mode_bindings.o: home/w2/w2/cpp/src/mode_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/mode_bindings.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.o
+home/w2/w2/cpp/src/mode_bindings.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/mode_bindings.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.i: home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.i
+home/w2/w2/cpp/src/mode_bindings.i: home/w2/w2/cpp/src/mode_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/mode_bindings.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.i
+home/w2/w2/cpp/src/mode_bindings.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/mode_bindings.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.s: home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.s
+home/w2/w2/cpp/src/mode_bindings.s: home/w2/w2/cpp/src/mode_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/mode_bindings.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.cpp.s
+home/w2/w2/cpp/src/mode_bindings.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/mode_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/mode_bindings.cpp.s
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.o: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.o
+home/w2/w2/cpp/src/onnxpolicy.o: home/w2/w2/cpp/src/onnxpolicy.cpp.o
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
+home/w2/w2/cpp/src/onnxpolicy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.i: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.i
+home/w2/w2/cpp/src/onnxpolicy.i: home/w2/w2/cpp/src/onnxpolicy.cpp.i
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
+home/w2/w2/cpp/src/onnxpolicy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.i
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.s: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.s
+home/w2/w2/cpp/src/onnxpolicy.s: home/w2/w2/cpp/src/onnxpolicy.cpp.s
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
+home/w2/w2/cpp/src/onnxpolicy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.s
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.cpp.s
 
 # Help Target
 help:
@@ -210,15 +210,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... mode"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/mode.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/mode.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/mode.s"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/mode_bindings.s"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.s"
+	@echo "... home/w2/w2/cpp/src/mode.o"
+	@echo "... home/w2/w2/cpp/src/mode.i"
+	@echo "... home/w2/w2/cpp/src/mode.s"
+	@echo "... home/w2/w2/cpp/src/mode_bindings.o"
+	@echo "... home/w2/w2/cpp/src/mode_bindings.i"
+	@echo "... home/w2/w2/cpp/src/mode_bindings.s"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy.o"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy.i"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy.s"
 .PHONY : help
 
 

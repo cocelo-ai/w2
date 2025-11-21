@@ -36,6 +36,7 @@ public:
 
     // ------- E-Stop API  -------
     [[noreturn]] void estop(const std::string& msg, bool is_physical_estop=false);
+    void warn(const std::string& msg);
 
     // ======= Read-only getters for Python =======
     inline std::pair<std::vector<float>, std::vector<float>> get_gains() const {

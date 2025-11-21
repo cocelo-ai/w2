@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/mode
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/mode
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/mode
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/mode
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -98,14 +98,14 @@ _deps/pybind11-build/clean:
 CMakeFiles/mode.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mode.dir/build.make CMakeFiles/mode.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles --progress-num=1,2,3,4 "Built target mode"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/w2/w2/sdk/classes/mode/CMakeFiles --progress-num=1,2,3,4 "Built target mode"
 .PHONY : CMakeFiles/mode.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/mode.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/mode/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/mode.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/mode/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/mode/CMakeFiles 0
 .PHONY : CMakeFiles/mode.dir/rule
 
 # Convenience name for target.

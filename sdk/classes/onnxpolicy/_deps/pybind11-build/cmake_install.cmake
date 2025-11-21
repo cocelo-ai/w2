@@ -1,4 +1,4 @@
-# Install script for directory: /home/flamingo_2w2l_light/w2/sdk/classes/onnxpolicy/_deps/pybind11-src
+# Install script for directory: /home/w2/w2/sdk/classes/onnxpolicy/_deps/pybind11-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,4 +1,4 @@
-# Install script for directory: /home/flamingo_2w2l_light/w2/sdk/classes/mode
+# Install script for directory: /home/w2/w2/sdk/classes/mode
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/flamingo_2w2l_light/w2/sdk/classes/mode/_deps/pybind11-build/cmake_install.cmake")
+  include("/home/w2/w2/sdk/classes/mode/_deps/pybind11-build/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -55,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/flamingo_2w2l_light/w2/sdk/classes/mode/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/w2/w2/sdk/classes/mode/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/robot
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/robot
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/robot
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/robot
 
 # Include any dependencies generated for this target.
 include CMakeFiles/robot.dir/depend.make
@@ -69,49 +69,49 @@ include CMakeFiles/robot.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/robot.dir/flags.make
 
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o: CMakeFiles/robot.dir/flags.make
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o: /home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o: CMakeFiles/robot.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o -MF CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o.d -o CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o -c /home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o: CMakeFiles/robot.dir/flags.make
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o: /home/w2/w2/cpp/src/robot_bindings.cpp
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o: CMakeFiles/robot.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/w2/w2/sdk/classes/robot/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o -MF CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o.d -o CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o -c /home/w2/w2/cpp/src/robot_bindings.cpp
 
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp > CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.i
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/w2/w2/cpp/src/robot_bindings.cpp > CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.i
 
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp -o CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.s
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/w2/w2/cpp/src/robot_bindings.cpp -o CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.s
 
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o: CMakeFiles/robot.dir/flags.make
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o: /home/flamingo_2w2l_light/w2/cpp/src/robot.cpp
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o: CMakeFiles/robot.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o -MF CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o.d -o CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o -c /home/flamingo_2w2l_light/w2/cpp/src/robot.cpp
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o: CMakeFiles/robot.dir/flags.make
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o: /home/w2/w2/cpp/src/robot.cpp
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o: CMakeFiles/robot.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/w2/w2/sdk/classes/robot/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o -MF CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o.d -o CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o -c /home/w2/w2/cpp/src/robot.cpp
 
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/flamingo_2w2l_light/w2/cpp/src/robot.cpp > CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.i
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/w2/w2/cpp/src/robot.cpp > CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.i
 
-CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/flamingo_2w2l_light/w2/cpp/src/robot.cpp -o CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.s
+CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/w2/w2/cpp/src/robot.cpp -o CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.s
 
 # Object files for target robot
 robot_OBJECTS = \
-"CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o" \
-"CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o"
+"CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o" \
+"CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o"
 
 # External object files for target robot
 robot_EXTERNAL_OBJECTS =
 
-robot.cpython-310-aarch64-linux-gnu.so: CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot_bindings.cpp.o
-robot.cpython-310-aarch64-linux-gnu.so: CMakeFiles/robot.dir/home/flamingo_2w2l_light/w2/cpp/src/robot.cpp.o
+robot.cpython-310-aarch64-linux-gnu.so: CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot_bindings.cpp.o
+robot.cpython-310-aarch64-linux-gnu.so: CMakeFiles/robot.dir/home/w2/w2/cpp/src/robot.cpp.o
 robot.cpython-310-aarch64-linux-gnu.so: CMakeFiles/robot.dir/build.make
 robot.cpython-310-aarch64-linux-gnu.so: /usr/local/lib/libfx_cli_cpp.a
 robot.cpython-310-aarch64-linux-gnu.so: /usr/local/lib/libfx_cli_cpp.a
 robot.cpython-310-aarch64-linux-gnu.so: CMakeFiles/robot.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX shared module robot.cpython-310-aarch64-linux-gnu.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/w2/w2/sdk/classes/robot/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX shared module robot.cpython-310-aarch64-linux-gnu.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/robot.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -123,6 +123,6 @@ CMakeFiles/robot.dir/clean:
 .PHONY : CMakeFiles/robot.dir/clean
 
 CMakeFiles/robot.dir/depend:
-	cd /home/flamingo_2w2l_light/w2/sdk/classes/robot && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/flamingo_2w2l_light/w2/sdk/classes/robot /home/flamingo_2w2l_light/w2/sdk/classes/robot /home/flamingo_2w2l_light/w2/sdk/classes/robot /home/flamingo_2w2l_light/w2/sdk/classes/robot /home/flamingo_2w2l_light/w2/sdk/classes/robot/CMakeFiles/robot.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/w2/w2/sdk/classes/robot && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/w2/w2/sdk/classes/robot /home/w2/w2/sdk/classes/robot /home/w2/w2/sdk/classes/robot /home/w2/w2/sdk/classes/robot /home/w2/w2/sdk/classes/robot/CMakeFiles/robot.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/robot.dir/depend
 

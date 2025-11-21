@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/onnxpolicy
+CMAKE_SOURCE_DIR = /home/w2/w2/sdk/classes/onnxpolicy
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/flamingo_2w2l_light/w2/sdk/classes/onnxpolicy
+CMAKE_BINARY_DIR = /home/w2/w2/sdk/classes/onnxpolicy
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/onnxpolicy/CMakeFiles /home/flamingo_2w2l_light/w2/sdk/classes/onnxpolicy//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/onnxpolicy/CMakeFiles /home/w2/w2/sdk/classes/onnxpolicy//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/flamingo_2w2l_light/w2/sdk/classes/onnxpolicy/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/w2/w2/sdk/classes/onnxpolicy/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,53 +129,53 @@ _onnxpolicy/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/build
 .PHONY : _onnxpolicy/fast
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.o: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.o
+home/w2/w2/cpp/src/onnxpolicy.o: home/w2/w2/cpp/src/onnxpolicy.cpp.o
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o
+home/w2/w2/cpp/src/onnxpolicy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.i: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.i
+home/w2/w2/cpp/src/onnxpolicy.i: home/w2/w2/cpp/src/onnxpolicy.cpp.i
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.i
+home/w2/w2/cpp/src/onnxpolicy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.i
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.s: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.s
+home/w2/w2/cpp/src/onnxpolicy.s: home/w2/w2/cpp/src/onnxpolicy.cpp.s
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.s
+home/w2/w2/cpp/src/onnxpolicy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.s
+.PHONY : home/w2/w2/cpp/src/onnxpolicy.cpp.s
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.o: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.o
+home/w2/w2/cpp/src/onnxpolicy_bindings.o: home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/onnxpolicy_bindings.o
 
 # target to build an object file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.o
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.o
+home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.o
+.PHONY : home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.o
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.i: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.i
+home/w2/w2/cpp/src/onnxpolicy_bindings.i: home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/onnxpolicy_bindings.i
 
 # target to preprocess a source file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.i
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.i
+home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.i
+.PHONY : home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.i
 
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.s: home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.s
+home/w2/w2/cpp/src/onnxpolicy_bindings.s: home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/onnxpolicy_bindings.s
 
 # target to generate assembly for a file
-home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.s
-.PHONY : home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.s
+home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/_onnxpolicy.dir/build.make CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.s
+.PHONY : home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.s
 
 # Help Target
 help:
@@ -186,12 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... _onnxpolicy"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.s"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.o"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.i"
-	@echo "... home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.s"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy.o"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy.i"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy.s"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy_bindings.o"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy_bindings.i"
+	@echo "... home/w2/w2/cpp/src/onnxpolicy_bindings.s"
 .PHONY : help
 
 

@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.o"
-  "CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl.cpp.o.d"
-  "CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.o"
-  "CMakeFiles/rl.dir/home/flamingo_2w2l_light/w2/cpp/src/rl_bindings.cpp.o.d"
+  "CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl.cpp.o"
+  "CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl.cpp.o.d"
+  "CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl_bindings.cpp.o"
+  "CMakeFiles/rl.dir/home/w2/w2/cpp/src/rl_bindings.cpp.o.d"
   "rl.cpython-310-aarch64-linux-gnu.so"
   "rl.pdb"
 )

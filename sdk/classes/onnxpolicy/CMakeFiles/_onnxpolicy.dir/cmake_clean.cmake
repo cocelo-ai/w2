@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o"
-  "CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy.cpp.o.d"
-  "CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.o"
-  "CMakeFiles/_onnxpolicy.dir/home/flamingo_2w2l_light/w2/cpp/src/onnxpolicy_bindings.cpp.o.d"
+  "CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o"
+  "CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy.cpp.o.d"
+  "CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.o"
+  "CMakeFiles/_onnxpolicy.dir/home/w2/w2/cpp/src/onnxpolicy_bindings.cpp.o.d"
   "onnxpolicy.cpython-310-aarch64-linux-gnu.so"
   "onnxpolicy.pdb"
 )

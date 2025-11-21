@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -Dmode_EXPORTS
 
-CXX_INCLUDES = -I/home/flamingo_2w2l_light/w2/cpp/include -I/home/flamingo_2w2l_light/w2/cpp/onnxruntime/include -isystem /home/flamingo_2w2l_light/w2/sdk/classes/mode/_deps/pybind11-src/include -isystem /usr/include/python3.10
+CXX_INCLUDES = -I/home/w2/w2/cpp/include -I/home/w2/w2/cpp/onnxruntime/include -isystem /home/w2/w2/sdk/classes/mode/_deps/pybind11-src/include -isystem /usr/include/python3.10
 
 CXX_FLAGS = -g -fPIC -fvisibility=hidden -std=gnu++17
 
