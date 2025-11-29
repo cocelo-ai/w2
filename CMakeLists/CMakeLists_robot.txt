@@ -60,7 +60,6 @@ set(ROBOT_SOURCES
   "${PROJ_ROOT}/cpp/src/robot.cpp"
   "${PROJ_ROOT}/cpp/src/safety.cpp"
   "${PROJ_ROOT}/cpp/src/mcu.cpp"
-  "${PROJ_ROOT}/cpp/src/fx_client_sim.cpp"
 )
 
 pybind11_add_module(robot MODULE ${ROBOT_SOURCES})
