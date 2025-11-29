@@ -31,22 +31,21 @@ namespace robot {
 // Motor Configuration 
 // ════════════════════════════════════════════════════════════════════════════
 
- /// @brief MOTOR_IDS is intentionally non-const due to external FxCli API constraint. (DO NOT MODIFY THIS VECTOR AT RUNTIME!)
-inline std::vector<uint8_t>       MOTOR_IDS           = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u};   ///< All registerd motor IDs 
-constexpr std::size_t             NUM_MOTORS          = 8;                                  ///< Total number of motors
-constexpr std::size_t             NUM_LIMB_MOTORS     = 6;                                  ///< Number of limb  motors (excluding wheels)
-inline std::array<std::size_t, 2> WHEEL_MIDS          = {7, 8};                             ///< Motor IDs for wheel actuators
+inline const std::vector<uint8_t>       MOTOR_IDS           = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u};   ///< All registerd motor IDs 
+constexpr std::size_t                   NUM_MOTORS          = 8;                                  ///< Total number of motors
+constexpr std::size_t                   NUM_LIMB_MOTORS     = 6;                                  ///< Number of limb  motors (excluding wheels)
+inline const std::array<std::size_t, 2> WHEEL_MIDS          = {7, 8};                             ///< Motor IDs for wheel actuators
 
 // ════════════════════════════════════════════════════════════════════════════
 // MCU Configuration
 // ════════════════════════════════════════════════════════════════════════════
 
-inline std::vector<uint8_t> MCU_MOTOR_IDS  = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u};  
-inline std::string          MCU_IP         = "192.168.10.10";
-inline int                  MCU_PORT       = 5101;
-inline bool                 MCU_HAS_IMU    = true; 
-inline bool                 MCU_HAS_BAT    = true; 
-inline bool                 MCU_HAS_ESTOP  = true; 
+inline const std::vector<uint8_t> MCU_MOTOR_IDS  = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u};  
+inline const std::string          MCU_IP         = "192.168.10.10";
+constexpr int                     MCU_PORT       = 5101;
+constexpr bool                    MCU_HAS_IMU    = true; 
+constexpr bool                    MCU_HAS_BAT    = true; 
+constexpr bool                    MCU_HAS_ESTOP  = true; 
 
 // ──────────────────────────────────────────────────────────────────────────
 // Joint Index Mapping for Observation and Action Vectors
