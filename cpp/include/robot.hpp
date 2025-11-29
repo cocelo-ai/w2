@@ -31,6 +31,7 @@ namespace robot {
 // Motor Configuration 
 // ════════════════════════════════════════════════════════════════════════════
 
+ /// @brief Motor IDs is intentionally non-const due to external FxCli API constraint. (DO NOT MODIFY THIS VECTOR AT RUNTIME!)
 inline std::vector<uint8_t>       MOTOR_IDS           = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u};   ///< All registerd motor IDs 
 constexpr std::size_t             NUM_MOTORS          = 8;                                  ///< Total number of motors
 constexpr std::size_t             NUM_LIMB_MOTORS     = 6;                                  ///< Number of limb  motors (excluding wheels)
