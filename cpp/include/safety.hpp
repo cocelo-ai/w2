@@ -30,34 +30,22 @@ namespace safety {
 
 /// @brief Maximum joint positions (relative to calibration offset)
 inline const std::unordered_map<std::string, float> REL_MAX_POS = {
-    {"front_left_hip",       0.65f},
-    {"front_right_hip",      0.65f},
-    {"front_left_shoulder",  1.5f},
-    {"front_right_shoulder", 1.5f},
-    {"front_left_leg",       INFINITY},
-    {"front_right_leg",      INFINITY},
-    {"rear_left_hip",        0.65f},
-    {"rear_right_hip",       0.65f},
-    {"rear_left_shoulder",   1.5f},
-    {"rear_right_shoulder",  1.5f},
-    {"rear_left_leg",        INFINITY},
-    {"rear_right_leg",       INFINITY},
+    {"left_hip",       0.65f},
+    {"right_hip",      0.65f},
+    {"left_shoulder",  1.5f},
+    {"right_shoulder", 1.5f},
+    {"left_leg",       INFINITY},
+    {"right_leg",      INFINITY}
 };
 
 /// @brief Minimum joint positions (relative to calibration offset)
 inline const std::unordered_map<std::string, float> REL_MIN_POS = {
-    {"front_left_hip",       -0.67f},
-    {"front_right_hip",      -0.67f},
-    {"front_left_shoulder",  -1.5f},
-    {"front_right_shoulder", -1.5f},
-    {"front_left_leg",       -0.9f},
-    {"front_right_leg",      -0.9f},
-    {"rear_left_hip",        -0.67f},
-    {"rear_right_hip",       -0.67f},
-    {"rear_left_shoulder",   -1.5f},
-    {"rear_right_shoulder",  -1.5f},
-    {"rear_left_leg",        -0.9f},
-    {"rear_right_leg",       -0.9f},
+    {"left_hip",       -0.67f},
+    {"right_hip",      -0.67f},
+    {"left_shoulder",  -1.5f},
+    {"right_shoulder", -1.5f},
+    {"left_leg",       -0.9f},
+    {"right_leg",      -0.9f}
 };
 
 // ════════════════════════════════════════════════════════════════════════════
