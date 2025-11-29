@@ -401,7 +401,10 @@ void Robot::check_safety() {
         mcu.motor_estop();
     }
     else{
-        // Software emergency: retry until confirmed
+        // Deliberately retry ESTOP in an unbounded loop until MCU succeed.
+        // In an emergency, hanging here is safer than continuing execution without
+        // a confirmed stop ("fail-stop" behaviour is preferred)
+        
         do_action(estop_action, /*torque_ctrl=*/true, /*safe=*/false);
         bool estop_finished = false;
         for (;;) {
