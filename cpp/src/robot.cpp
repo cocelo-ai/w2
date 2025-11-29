@@ -38,8 +38,8 @@ Robot::Robot()
     mcu(MCU_IP, MCU_PORT, MCU_MOTOR_IDS, MCU_HAS_IMU, MCU_HAS_BAT, MCU_HAS_ESTOP)
 {
     // Initialize observation containers for RL state
-    obs["dof_pos"] = std::vector<float>(NUM_LIMB_MOTORS, 0.0f);      // 12 leg joint positions (no wheels)
-    obs["dof_vel"] = std::vector<float>(NUM_MOTORS, 0.0f);            // 16 motor velocities (all motors)
+    obs["dof_pos"] = std::vector<float>(NUM_LIMB_MOTORS, 0.0f);       // 6 leg joint positions (no wheels)
+    obs["dof_vel"] = std::vector<float>(NUM_MOTORS, 0.0f);            // 8 motor velocities (all motors)
     obs["ang_vel"] = std::vector<float>(3, 0.0f);                     // IMU angular velocity
     obs["proj_grav"] = std::vector<float>(3, 0.0f);                   // IMU (normalized) projected gravity
     obs["lin_vel"] = std::vector<float>(3, 0.0f);                     // Linear velocity (base) 
