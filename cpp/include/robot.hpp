@@ -51,14 +51,14 @@ inline bool                 MCU_HAS_ESTOP  = true;
 // Joint Index Mapping for Observation and Action Vectors
 // ──────────────────────────────────────────────────────────────────────────
 
-constexpr std::size_t LEFT_HIP_IDX       = 0;   ///< Front Left hip joint index
-constexpr std::size_t RIGHT_HIP_IDX      = 1;   ///< Front Right hip joint index
-constexpr std::size_t LEFT_SHOULDER_IDX  = 2;   ///< Front Left shoulder joint index
-constexpr std::size_t RIGHT_SHOULDER_IDX = 3;   ///< Front Right shoulder joint index
-constexpr std::size_t LEFT_LEG_IDX       = 4;   ///< Front Left leg joint index
-constexpr std::size_t RIGHT_LEG_IDX      = 5;   ///< Front Right leg joint index
-constexpr std::size_t LEFT_WHEEL_IDX     = 6;   ///< Front Left wheel motor index
-constexpr std::size_t RIGHT_WHEEL_IDX    = 7;   ///< Front Right wheel motor index
+constexpr std::size_t LEFT_HIP_IDX       = 0;   ///< Left hip joint index
+constexpr std::size_t RIGHT_HIP_IDX      = 1;   ///< Right hip joint index
+constexpr std::size_t LEFT_SHOULDER_IDX  = 2;   ///< Left shoulder joint index
+constexpr std::size_t RIGHT_SHOULDER_IDX = 3;   ///< Right shoulder joint index
+constexpr std::size_t LEFT_LEG_IDX       = 4;   ///< Left leg joint index
+constexpr std::size_t RIGHT_LEG_IDX      = 5;   ///< Right leg joint index
+constexpr std::size_t LEFT_WHEEL_IDX     = 6;   ///< Left wheel motor index
+constexpr std::size_t RIGHT_WHEEL_IDX    = 7;   ///< Right wheel motor index
 
 // ──────────────────────────────────────────────────────────────────────────
 // Motor ID Mapping Tables (MID → Joint Index)
