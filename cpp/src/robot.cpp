@@ -44,7 +44,7 @@ Robot::Robot()
     obs_["height_map"] = std::vector<float>(HEIGHT_MAP_SIZE, 0.6128f); ///< Terrain heightmap
 
     // Wait for MCUs to be ready
-    waitMcu(mcu_);
+    //waitMcu(mcu_);
 }
 
 // ------- Wait All Nodes -------
@@ -125,7 +125,7 @@ void Robot::setGains(const std::vector<float>& kp, const std::vector<float>& kd)
 }
 
 // Update lateste observation
-std::unordered_map<std::string, std::vector<float>>& Robot::updateMcuObs(mcu::McuClient& m){
+void Robot::updateMcuObs(mcu::McuClient& m){
     auto& dof_pos   = obs_.at("dof_pos");   ///< size: NUM_LIMB_MOTORS
     auto& dof_vel   = obs_.at("dof_vel");   ///< size: NUM_MOTORS
     auto& ang_vel   = obs_.at("ang_vel");   ///< size: 3
@@ -155,16 +155,14 @@ std::unordered_map<std::string, std::vector<float>>& Robot::updateMcuObs(mcu::Mc
         proj_grav[1] = mcu_obs.pg[1];
         proj_grav[2] = mcu_obs.pg[2];    
     }   
-
-    return obs_;
 }
 
 // Get current observation 
 std::unordered_map<std::string, std::vector<float>> Robot::getObs() {
     // Send action to get latest observation (MIT protocol motors require command to return state)
-    doAction(last_action_, last_torque_ctrl_, false);
-    auto& mcu_obs = updateMcuObs(mcu_);  ///< update mcu obs
-    return mcu_obs;
+    //doAction(last_action_, last_torque_ctrl_, false);
+    updateMcuObs(mcu_);  ///< update mcu obs
+    return obs_;
 }
 
 // Do action (RL action → motor commands)
@@ -233,12 +231,13 @@ void Robot::checkSafety() {
     battery_voltage_ = status.battery_voltage;
     battery_soc_     = status.battery_soc;
 
-    for (auto mid : mcu_.motorIds()) {
-        std::size_t idx = static_cast<std::size_t>(mid - 1); 
-        motor_pattern_[idx] = status.motor_pattern[idx];
-        motor_err_[idx]     = status.motor_err[idx];
+    for (std::size_t i = 0; i < mcu_.numMotors(); ++i) {
+        auto mid  = mcu_.motorIds()[i];
+        auto idx  = MID_TO_OBS_IDX[mid];
+        motor_pattern_[idx] = status.motor_pattern[i]; 
+        motor_err_[idx]     = status.motor_err[i];  
     }
-
+    
     auto safety_result = safety::checkAllSafety(status, obs_);
 
     // Handle safety violations
