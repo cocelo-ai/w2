@@ -125,6 +125,7 @@ private:
     // Device & Threading
     // ───────────────────────────────────────────────────────────────────────
     int  openDevice(int timeout_ms);
+    void flushEventBuffer(int fd);
     void readerThreadFunc();
 
     // ───────────────────────────────────────────────────────────────────────
