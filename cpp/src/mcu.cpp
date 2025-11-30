@@ -46,7 +46,7 @@ const McuObs& McuClient::fetchObs() {
     }
 
     // Helper to parse individual motor data
-    auto get_motor = [&](std::size_t index)
+    auto getMotor = [&](std::size_t index)
         -> const std::unordered_map<std::string, std::string>*
     {
         std::string key = "M" + std::to_string(index); // e.g., "M1", "M2", ...
@@ -61,7 +61,7 @@ const McuObs& McuClient::fetchObs() {
     for (std::size_t i = 0; i < motor_ids_.size(); ++i) {
         auto mid = motor_ids_[i];
 
-        const auto* m = get_motor(static_cast<std::size_t>(mid));
+        const auto* m = getMotor(static_cast<std::size_t>(mid));
         if (!m) {
             ++req_miss_count_;
             return mcu_obs_;
@@ -96,7 +96,7 @@ const McuObs& McuClient::fetchObs() {
         }
 
         const auto& imu = it_imu->second;
-        auto get_imu = [&](const char* key, float& out) -> bool {
+        auto getImu = [&](const char* key, float& out) -> bool {
             auto it = imu.find(key);
             if (it == imu.end() || it->second == "N")
                 return false;
@@ -105,12 +105,8 @@ const McuObs& McuClient::fetchObs() {
         };
 
         float gx, gy, gz, pgx, pgy, pgz;
-        if (!get_imu("gx", gx)  ||
-            !get_imu("gy", gy)  ||
-            !get_imu("gz", gz)  ||
-            !get_imu("pgx", pgx)||
-            !get_imu("pgy", pgy)||
-            !get_imu("pgz", pgz))
+        if (!getImu("gx", gx)   || !getImu("gy", gy)  || !getImu("gz", gz)   ||
+            !getImu("pgx", pgx) || !getImu("pgy", pgy)|| !getImu("pgz", pgz))
         {
             ++req_miss_count_;
             return mcu_obs_;
