@@ -1,0 +1,123 @@
+cmake_minimum_required(VERSION 3.14)
+project(joystick LANGUAGES CXX)
+
+# ===== Basics =====
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# ===== Fail fast: required args =====
+# - PROJ_ROOT: 절대 경로의 프로젝트 루트
+if(NOT DEFINED PROJ_ROOT)
+  message(FATAL_ERROR "PROJ_ROOT must be defined (absolute project root)")
+endif()
+if(NOT IS_ABSOLUTE "${PROJ_ROOT}")
+  message(FATAL_ERROR "PROJ_ROOT must be absolute: ${PROJ_ROOT}")
+endif()
+if(NOT IS_DIRECTORY "${PROJ_ROOT}")
+  message(FATAL_ERROR "PROJ_ROOT is not a directory: ${PROJ_ROOT}")
+endif()
+
+# - PY_MODULE_SRC: 바인딩 소스
+if(NOT DEFINED PY_MODULE_SRC)
+  set(PY_MODULE_SRC "${PROJ_ROOT}/cpp/src/joystick_bindings.cpp")
+endif()
+if(NOT IS_ABSOLUTE "${PY_MODULE_SRC}")
+  message(FATAL_ERROR "PY_MODULE_SRC must be absolute: ${PY_MODULE_SRC}")
+endif()
+if(NOT EXISTS "${PY_MODULE_SRC}")
+  message(FATAL_ERROR "PY_MODULE_SRC not found: ${PY_MODULE_SRC}")
+endif()
+
+set(CPP_INCLUDE_DIR "${PROJ_ROOT}/cpp/include")
+if(NOT IS_DIRECTORY "${CPP_INCLUDE_DIR}")
+  message(FATAL_ERROR "CPP_INCLUDE_DIR not found: ${CPP_INCLUDE_DIR}")
+endif()
+
+# ===== Output root =====
+if(NOT DEFINED PREFIX_DIR)
+  set(PREFIX_DIR "${CMAKE_SOURCE_DIR}/dist")
+endif()
+
+# ===== Python & pybind11 =====
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+include(FetchContent)
+set(PYBIND11_NEWPYTHON ON)
+FetchContent_Declare(pybind11
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
+  GIT_TAG v2.12.0
+)
+FetchContent_MakeAvailable(pybind11)
+
+# ===== Python package output =====
+set(PY_PKG_NAME "joystick")
+set(PY_PKG_DIR "${PREFIX_DIR}/${PY_PKG_NAME}")
+file(MAKE_DIRECTORY "${PY_PKG_DIR}")
+
+# ===== Build =====
+set(JOYSTICK_SOURCES
+  "${PY_MODULE_SRC}"
+  "${PROJ_ROOT}/cpp/src/joystick.cpp"
+)
+
+pybind11_add_module(joystick MODULE ${JOYSTICK_SOURCES})
+target_compile_features(joystick PRIVATE cxx_std_20)
+target_include_directories(joystick PRIVATE "${CPP_INCLUDE_DIR}")
+
+# Debug 빌드 전용 매크로
+target_compile_definitions(joystick PRIVATE $<$<CONFIG:Debug>:DEBUG>)
+
+# 경고 옵션
+if(MSVC)
+  target_compile_options(joystick PRIVATE /W3)
+else()
+  target_compile_options(joystick PRIVATE
+    -Wall -Wextra -Wpedantic
+    -Wno-unused-function
+    -Wno-missing-field-initializers
+  )
+  # 심볼 가시성 최소화
+  target_compile_options(joystick PRIVATE -fvisibility=hidden)
+endif()
+
+# pthread 등 스레딩 라이브러리
+find_package(Threads REQUIRED)
+target_link_libraries(joystick PRIVATE Threads::Threads)
+
+set_target_properties(joystick PROPERTIES
+  PREFIX ""                                  # 파이썬 모듈 접두사 비움
+  LIBRARY_OUTPUT_DIRECTORY "${PY_PKG_DIR}"   # .so/.pyd 출력 경로
+  RUNTIME_OUTPUT_DIRECTORY "${PY_PKG_DIR}"
+  OUTPUT_NAME "joystick"                     # import joystick
+)
+
+# RPATH (런타임 로더가 현재 폴더에서 찾도록)
+if(APPLE)
+  set_target_properties(joystick PROPERTIES
+    INSTALL_RPATH "@loader_path"
+    BUILD_RPATH "@loader_path"
+  )
+elseif(UNIX)
+  set_target_properties(joystick PROPERTIES
+    INSTALL_RPATH "\$ORIGIN"
+    BUILD_RPATH "\$ORIGIN"
+  )
+endif()
+
+file(GENERATE
+  OUTPUT "${PY_PKG_DIR}/__init__.py"
+  CONTENT "from .joystick import Joystick, JoystickEstopError, JoystickSleepError, JoystickOutput
+
+__all__ = ['Joystick', 'JoystickEstopError', 'JoystickSleepError', 'JoystickOutput']
+__version__ = '1.0.0'
+"
+)
+
+# ===== Info =====
+message(STATUS "=== JOYSTICK INFO ===")
+message(STATUS "PROJ_ROOT:          ${PROJ_ROOT}")
+message(STATUS "PY_MODULE_SRC:      ${PY_MODULE_SRC}")
+message(STATUS "PREFIX_DIR:         ${PREFIX_DIR}")
+message(STATUS "Package directory:  ${PY_PKG_DIR}")
+message(STATUS "Python interpreter: ${Python3_EXECUTABLE}")
+message(STATUS "")

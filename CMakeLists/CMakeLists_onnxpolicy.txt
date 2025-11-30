@@ -1,0 +1,171 @@
+cmake_minimum_required(VERSION 3.14)
+project(onnxpolicy_bindings LANGUAGES CXX)
+
+# ===== Options =====
+set(BUILD_SHARED_LIBS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# PREFIX_DIR can be overridden via -DPREFIX_DIR=...
+if(NOT DEFINED PREFIX_DIR)
+  set(PREFIX_DIR "${CMAKE_SOURCE_DIR}/dist")
+endif()
+
+# Find Python interpreter (we only require interpreter here)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+# Fetch pybind11 (FetchContent)
+include(FetchContent)
+set(PYBIND11_NEWPYTHON ON)
+FetchContent_Declare(
+  pybind11
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
+  GIT_TAG        v2.12.0
+)
+FetchContent_MakeAvailable(pybind11)
+
+# ===== Paths =====
+# 기존: PROJ_ROOT = ${CMAKE_SOURCE_DIR}
+# 변경: 요청하신 디렉터리 구조(w2/...)를 루트로 사용
+if(NOT DEFINED PROJ_ROOT)
+  set(PROJ_ROOT "${CMAKE_SOURCE_DIR}/w2")                # ⇦ CHANGED: 루트를 w2로 이동
+endif()
+
+# 포함 경로는 동일 규칙이지만 상위 루트가 바뀌었으므로 실제 경로가 w2/cpp/include로 바뀜
+if(NOT DEFINED CPP_INCLUDE_DIR)
+  set(CPP_INCLUDE_DIR "${PROJ_ROOT}/cpp/include")        # ⇦ CHANGED: 효과적으로 w2/cpp/include
+endif()
+
+# Resolve ONNXRUNTIME root/include/lib (동일)
+if(DEFINED ONNXRUNTIME_DIR)
+  set(_ORT_ROOT "${ONNXRUNTIME_DIR}")
+elseif(DEFINED ENV{ONNXRUNTIME_DIR})
+  set(_ORT_ROOT "$ENV{ONNXRUNTIME_DIR}")
+else()
+  set(_ORT_ROOT "${PROJ_ROOT}/cpp/onnxruntime")          # ⇦ CHANGED: w2 기준 경로
+endif()
+
+if(DEFINED ONNXRUNTIME_INCLUDE_DIR)
+  set(_ORT_INC "${ONNXRUNTIME_INCLUDE_DIR}")
+else()
+  set(_ORT_INC "${_ORT_ROOT}/include")
+endif()
+
+if(DEFINED ONNXRUNTIME_LIB_DIR)
+  set(_ORT_LIBDIR "${ONNXRUNTIME_LIB_DIR}")
+else()
+  set(_ORT_LIBDIR "${_ORT_ROOT}/lib")
+endif()
+
+# sanity check (동일)
+if(NOT EXISTS "${_ORT_INC}" OR NOT EXISTS "${_ORT_LIBDIR}")
+  message(FATAL_ERROR "onnxruntime include/lib not found. Tried:\n  include: ${_ORT_INC}\n  lib: ${_ORT_LIBDIR}\nHint: pass -DONNXRUNTIME_DIR=/path/to/onnxruntime or set ONNXRUNTIME_DIR env or set ONNXRUNTIME_INCLUDE_DIR/ONNXRUNTIME_LIB_DIR.")
+endif()
+
+# canonical variable for messages
+set(ONNXRUNTIME_DIR "${_ORT_ROOT}")
+
+# ===== Python package output folder =====
+set(PY_PKG_DIR "${PREFIX_DIR}/onnxpolicy")
+file(MAKE_DIRECTORY "${PY_PKG_DIR}")
+
+# ===== sources =====
+# 기존: ${PROJ_ROOT}/src/onnxpolicy_binding.cpp (단수, 경로도 다름)
+# 변경: 파일명 오탈자 수정 + w2/cpp/src/onnxpolicy_bindings.cpp
+if(NOT DEFINED PY_MODULE_SRC)
+  set(PY_MODULE_SRC "${PROJ_ROOT}/cpp/src/onnxpolicy_bindings.cpp")  # ⇦ CHANGED: 경로/파일명 수정
+endif()
+
+# 기존 CMake에는 라이브러리 구현 소스(onnxpolicy.cpp) 컴파일 추가가 없었음
+# 변경: 확장 모듈에 함께 빌드되도록 추가
+set(CPP_SOURCES
+  "${PROJ_ROOT}/cpp/src/onnxpolicy.cpp"                                # ⇦ ADDED: C++ 구현 소스 컴파일 포함
+)
+
+# 확인 (존재 체크 로직 유지 + 소스들 확인 추가)
+if(NOT EXISTS "${PY_MODULE_SRC}")
+  message(FATAL_ERROR "Expected binding source not found: ${PY_MODULE_SRC}")
+endif()
+foreach(_s IN LISTS CPP_SOURCES)
+  if(NOT EXISTS "${_s}")
+    message(FATAL_ERROR "Expected C++ source not found: ${_s}")
+  endif()
+endforeach()
+
+# Find onnxruntime lib (리눅스 기본 로직 유지)
+find_library(ONNXRUNTIME_LIB NAMES onnxruntime libonnxruntime HINTS "${_ORT_LIBDIR}" REQUIRED)
+
+# 기존: 리눅스 .so만 가정
+# 변경: macOS(.dylib), Windows(.dll) 후보도 탐색
+file(GLOB _cand "${_ORT_LIBDIR}/libonnxruntime.so*")
+if(_cand)
+  list(GET _cand 0 ONNXRUNTIME_DLL)
+else()
+  if(APPLE)                                                       # ⇦ ADDED: macOS 후보
+    file(GLOB _cand_dylib "${_ORT_LIBDIR}/libonnxruntime.*.dylib" "${_ORT_LIBDIR}/libonnxruntime.dylib")
+    if(_cand_dylib)
+      list(GET _cand_dylib 0 ONNXRUNTIME_DLL)
+    else()
+      set(ONNXRUNTIME_DLL "${_ORT_LIBDIR}/libonnxruntime.dylib")
+    endif()
+  elseif(WIN32)                                                   # ⇦ ADDED: Windows 후보
+    file(GLOB _cand_dll "${_ORT_LIBDIR}/onnxruntime.dll" "${_ORT_LIBDIR}/onnxruntime*.dll")
+    if(_cand_dll)
+      list(GET _cand_dll 0 ONNXRUNTIME_DLL)
+    else()
+      set(ONNXRUNTIME_DLL "${_ORT_LIBDIR}/onnxruntime.dll")
+    endif()
+  else()
+    set(ONNXRUNTIME_DLL "${_ORT_LIBDIR}/libonnxruntime.so")
+  endif()
+endif()
+
+# ===== create the Python extension target =====
+# 기존: pybind11_add_module(onnxpolicy MODULE "${PY_MODULE_SRC}")
+# 변경: 구현 소스(${CPP_SOURCES})를 함께 타깃에 추가
+pybind11_add_module(onnxpolicy MODULE "${PY_MODULE_SRC}" ${CPP_SOURCES})  # ⇦ CHANGED: 구현 소스 포함
+target_compile_features(onnxpolicy PRIVATE cxx_std_17)
+target_include_directories(onnxpolicy PRIVATE "${CPP_INCLUDE_DIR}" "${_ORT_INC}")
+target_link_libraries(onnxpolicy PRIVATE "${ONNXRUNTIME_LIB}")
+
+# 산출물 이름/출력 위치는 동일
+set_target_properties(onnxpolicy PROPERTIES
+  PREFIX ""
+  LIBRARY_OUTPUT_DIRECTORY "${PY_PKG_DIR}"
+  RUNTIME_OUTPUT_DIRECTORY "${PY_PKG_DIR}"
+  OUTPUT_NAME "onnxpolicy"
+)
+
+# RPATH 설정 (동일)
+if(APPLE)
+  set_target_properties(onnxpolicy PROPERTIES INSTALL_RPATH "@loader_path" BUILD_RPATH "@loader_path")
+elseif(UNIX)
+  set_target_properties(onnxpolicy PROPERTIES INSTALL_RPATH "\$ORIGIN" BUILD_RPATH "\$ORIGIN")
+endif()
+
+# 패키지 파일 생성 (동일)
+file(GENERATE
+  OUTPUT "${PY_PKG_DIR}/__init__.py"
+  CONTENT "from .onnxpolicy import MLPPolicy, LSTMPolicy\n__all__ = ['MLPPolicy','LSTMPolicy']\n"
+)
+file(GENERATE
+  OUTPUT "${PY_PKG_DIR}/VERSION"
+  CONTENT "0.1.0\n"
+)
+
+# onnxruntime 공유 라이브러리 모듈 옆에 복사 (리눅스 외 확장됨)
+if(EXISTS "${ONNXRUNTIME_DLL}")
+  add_custom_command(TARGET onnxpolicy POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ONNXRUNTIME_DLL}" "${PY_PKG_DIR}"
+  )
+endif()
+
+# 로그 (동일)
+message("ONNXPOLICY INFO")
+message(STATUS "PREFIX_DIR: ${PREFIX_DIR}")
+message(STATUS "Python (interp): ${Python3_EXECUTABLE}")
+message(STATUS "onnxruntime root: ${ONNXRUNTIME_DIR}")
+message(STATUS "onnxruntime include: ${_ORT_INC}")
+message(STATUS "onnxruntime libdir: ${_ORT_LIBDIR}")
+message("")
