@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include <fx_cli/fx_client.h> 
+#include "robot.hpp"
 #include "mcu.hpp"   
 #include "safety.hpp"
 
@@ -279,16 +280,13 @@ private:
 
     /**
      * @brief Parses and updates robot observation state from MCU data
-     * @param mcu_data Raw observation data from motor controller (FxCli response)
-     * @param mcu MCU client being updated (motor IDs, IMU/battery flags, req_miss_count)
-     * @return Reference to internal observation map (obs)
+     * @param m MCU client being updated
      * @details Extracts the following data:
      *          - Motor positions and velocities for limb joints (→ dof_pos, dof_vel)
      *          - Motor velocities for wheel motors (→ dof_vel)
      *          - IMU data: angular velocity and projected gravity (if mcu.has_imu)
-     *          Updates mcu.req_miss_count on failure, resets to 0 on success
      */
-    std::unordered_map<std::string, std::vector<float>>& updateMcuObs(mcu::McuClient& m);
+    void updateMcuObs(mcu::McuClient& m);
 
     /**
      * @brief Checks if a motor ID corresponds to a limb joint
