@@ -23,7 +23,7 @@ const std::set<std::string> Joystick::REQUIRED_KEYS = {
 static double LPF_ALPHA = 0.0;
 static double LPF_ALPHA_STOP = 0.0;
 
-// Constructor: init state, validate mapping, start thread
+// Constructor: initialize state, validate mapping, start thread
 Joystick::Joystick(const std::vector<double>& max_cmd_input,
                    double smoothness,
                    const std::map<std::string,int>& mapping_input)
@@ -69,7 +69,7 @@ Joystick::Joystick(const std::vector<double>& max_cmd_input,
     initializeMapping(mapping_input);
     setupScales();
 
-    // Neutral extra inputs
+    // Initialize extra button inputs to neutral state
     extra_btn_input_["hatX"] = 0;
     extra_btn_input_["hatY"] = 0;
     extra_btn_input_["X"] = 0;
@@ -79,7 +79,7 @@ Joystick::Joystick(const std::vector<double>& max_cmd_input,
     extra_btn_input_["ABS_Z"] = 0;
     extra_btn_input_["ABS_RZ"] = 0;
 
-    // Start reader thread
+    // Start background reader thread
     reader_thread_ = std::thread(&Joystick::readerThreadFunc, this);
 }
 
@@ -95,7 +95,7 @@ Joystick::~Joystick() {
     }
 }
 
-// max_cmd: non-negative, at most 6, default 1.0
+// Validate max_cmd: non-negative, at most 6, default 1.0
 void Joystick::validateMaxCmd(const std::vector<double>& max_cmd_input) {
     max_cmd_.assign(TOTAL_IDX_NUM, 1.0);
     if (!max_cmd_input.empty()) {
@@ -120,10 +120,10 @@ void Joystick::validateMaxCmd(const std::vector<double>& max_cmd_input) {
     }
 }
 
-// Logical mapping + evdev code mapping
+// Validate and set up logical mapping + evdev code mapping
 void Joystick::initializeMapping(const std::map<std::string,int>& mapping_input) {
     if (mapping_input.empty()) {
-        // Default mapping 
+        // Default mapping for F710 gamepad
         mapping_["LEFT_X"]  = 2;
         mapping_["LEFT_Y"]  = 0;
         mapping_["RIGHT_X"] = 1;
@@ -177,7 +177,7 @@ void Joystick::initializeMapping(const std::map<std::string,int>& mapping_input)
         mapping_ = mapping_input;
     }
 
-    // Evdev code -> command index
+    // Map evdev axis/button codes to command indices
     key_to_cmd_idx_.clear();
     key_to_cmd_idx_["ABS_X"]  = mapping_["LEFT_X"];
     key_to_cmd_idx_["ABS_Y"]  = mapping_["LEFT_Y"];
@@ -187,7 +187,7 @@ void Joystick::initializeMapping(const std::map<std::string,int>& mapping_input)
     key_to_cmd_idx_["BTN_TR"] = mapping_["RIGHT_BTN"];
 }
 
-// Scales for axes and shoulder buttons
+// Set up scaling factors for axes and shoulder buttons
 void Joystick::setupScales() {
     scales_.clear();
     for (int i = 0; i < TOTAL_IDX_NUM; ++i) {
@@ -223,6 +223,11 @@ int Joystick::openDevice(int timeout_ms) {
                 int fd = ::open(glob_result.gl_pathv[i], O_RDONLY | O_NONBLOCK);
                 if (fd >= 0) {
                     globfree(&glob_result);
+                    
+                    // FIX: Flush stale events from kernel evdev buffer
+                    // This prevents reading old button presses from previous process instances
+                    flushEventBuffer(fd);
+                    
                     return fd;
                 }
             }
@@ -233,6 +238,32 @@ int Joystick::openDevice(int timeout_ms) {
             return -1;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+}
+
+// FIX: Flush stale events remaining in kernel buffer after process restart
+void Joystick::flushEventBuffer(int fd) {
+    struct input_event ev;
+    int flush_count = 0;
+    
+    // Read and discard all pending events until buffer is empty
+    while (true) {
+        ssize_t bytes = ::read(fd, &ev, sizeof(ev));
+        if (bytes == static_cast<ssize_t>(sizeof(ev))) {
+            flush_count++;
+            continue;  // Keep reading and discarding
+        } else if (bytes < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
+            // No more data available (normal condition)
+            break;
+        } else {
+            // Read error occurred
+            break;
+        }
+    }
+    
+    if (flush_count > 0) {
+        std::cout << "[Joystick] Flushed " << flush_count 
+                  << " stale events from kernel buffer\n";
     }
 }
 
@@ -261,7 +292,7 @@ void Joystick::readerThreadFunc() {
         FD_SET(device_fd_, &rfds);
         struct timeval tv;
         tv.tv_sec = 0;
-        tv.tv_usec = 100000; // 0.1 s
+        tv.tv_usec = 100000; // 0.1 second timeout
         int sel = ::select(device_fd_ + 1, &rfds, nullptr, nullptr, &tv);
         if (sel < 0) {
             disconnected_ = true;
@@ -280,6 +311,7 @@ void Joystick::readerThreadFunc() {
                 int value = 0;
 
                 if (ev.type == EV_ABS) {
+                    // Absolute axis events
                     switch (ev.code) {
                     case 0:  code = "ABS_X";      break;
                     case 1:  code = "ABS_Y";      break;
@@ -293,6 +325,7 @@ void Joystick::readerThreadFunc() {
                     }
                     value = ev.value;
                 } else if (ev.type == EV_KEY) {
+                    // Button press/release events
                     switch (ev.code) {
                     case 304: code = "BTN_A";         break;
                     case 305: code = "BTN_B";         break;
@@ -353,18 +386,20 @@ void Joystick::readerThreadFunc() {
     }
 }
 
-// Decode one batch of events into state
+// Decode one batch of events into internal state
 void Joystick::processEventBatch(const std::vector<std::pair<std::string,int>>& batch) {
     for (const auto& item : batch) {
         const std::string& code = item.first;
         int state = item.second;
 
+        // D-pad horizontal axis
         if (code == "ABS_HAT0X") {
             if (state < 0)      extra_btn_input_["hatX"] = -1;
             else if (state > 0) extra_btn_input_["hatX"] = 1;
             else                extra_btn_input_["hatX"] = 0;
             continue;
         }
+        // D-pad vertical axis
         if (code == "ABS_HAT0Y") {
             if (state < 0)      extra_btn_input_["hatY"] = -1;
             else if (state > 0) extra_btn_input_["hatY"] = 1;
@@ -372,21 +407,25 @@ void Joystick::processEventBatch(const std::vector<std::pair<std::string,int>>& 
             continue;
         }
 
+        // Left trigger (analog)
         if (code == "ABS_Z") {
             extra_btn_input_["ABS_Z"] = state;
             continue;
         }
+        // Right trigger (analog)
         if (code == "ABS_RZ") {
             extra_btn_input_["ABS_RZ"] = state;
             continue;
         }
 
+        // Face buttons (with aliasing for different driver versions)
         auto alias_it = btn_alias_.find(code);
         if (alias_it != btn_alias_.end()) {
             extra_btn_input_[alias_it->second] = state;
             continue;
         }
 
+        // Joystick axes and shoulder buttons
         auto cmd_it = key_to_cmd_idx_.find(code);
         if (cmd_it != key_to_cmd_idx_.end()) {
             int idx = cmd_it->second;
@@ -400,7 +439,7 @@ void Joystick::processEventBatch(const std::vector<std::pair<std::string,int>>& 
     }
 }
 
-// D-pad + face buttons -> mode 1..16
+// Update mode selection based on D-pad + face button combinations
 void Joystick::updateMode() {
     std::optional<int> new_mode;
 
@@ -411,28 +450,36 @@ void Joystick::updateMode() {
     int A = extra_btn_input_["A"];
     int Y = extra_btn_input_["Y"];
 
+    // D-pad up combinations
     if (hatY == -1) {
         if (Y)      new_mode = 1;
         else if (B) new_mode = 2;
         else if (A) new_mode = 3;
         else if (X) new_mode = 4;
-    } else if (hatX == 1) {
+    }
+    // D-pad right combinations
+    else if (hatX == 1) {
         if (Y)      new_mode = 5;
         else if (B) new_mode = 6;
         else if (A) new_mode = 7;
         else if (X) new_mode = 8;
-    } else if (hatY == 1) {
+    }
+    // D-pad down combinations
+    else if (hatY == 1) {
         if (Y)      new_mode = 9;
         else if (B) new_mode = 10;
         else if (A) new_mode = 11;
         else if (X) new_mode = 12;
-    } else if (hatX == -1) {
+    }
+    // D-pad left combinations
+    else if (hatX == -1) {
         if (Y)      new_mode = 13;
         else if (B) new_mode = 14;
         else if (A) new_mode = 15;
         else if (X) new_mode = 16;
     }
 
+    // Only trigger mode change on button press (not hold)
     if (new_mode.has_value() && !last_new_mode_.has_value()) {
         mode_id_ = new_mode;
     } else {
@@ -441,14 +488,14 @@ void Joystick::updateMode() {
     last_new_mode_ = new_mode;
 }
 
-// Both triggers > 0 -> estop
+// Check if both triggers pressed simultaneously -> emergency stop
 void Joystick::updateEstopFlag() {
     bool new_estop =
         (extra_btn_input_["ABS_Z"] > 0 && extra_btn_input_["ABS_RZ"] > 0);
     estop_flag_.store(new_estop);
 }
 
-// Right trigger held HOLD_SEC -> sleep
+// Right trigger held for HOLD_SEC seconds -> sleep mode
 void Joystick::updateSleepFlag() {
     auto now = std::chrono::steady_clock::now();
     bool rz_active = extra_btn_input_["ABS_RZ"] > 0;
@@ -466,7 +513,7 @@ void Joystick::updateSleepFlag() {
     }
 }
 
-// Left trigger held HOLD_SEC -> wake
+// Left trigger held for HOLD_SEC seconds -> wake from sleep
 void Joystick::updateWakeFlag() {
     auto now = std::chrono::steady_clock::now();
     bool z_active = extra_btn_input_["ABS_Z"] > 0;
@@ -484,8 +531,9 @@ void Joystick::updateWakeFlag() {
     }
 }
 
-// Drain events, update state, filter, return output (or throw)
+// Drain event queue, apply smoothing filter, return command output
 JoystickOutput Joystick::getCmd() {
+    // Process all pending events from the queue
     while (true) {
         std::vector<std::pair<std::string,int>> batch;
         {
@@ -499,20 +547,25 @@ JoystickOutput Joystick::getCmd() {
         processEventBatch(batch);
     }
 
+    // Apply deadzone and low-pass filter to each axis
     for (int i = 0; i < TOTAL_IDX_NUM; ++i) {
         double raw_cmd = joystick_input_[i] * scales_[i];
+        
+        // Apply deadzone threshold
         if (std::fabs(raw_cmd) < dz_th_[i]) {
             raw_cmd = 0.0;
         }
 
-        // 2. 그 다음 LPF
+        // Apply low-pass filter (skip for digital buttons)
         if (i != mapping_["LEFT_BTN"] && i != mapping_["RIGHT_BTN"]) {
             double filtered;
             if (raw_cmd == 0.0) {
+                // Use slower filter when stopping
                 filtered =
                     LPF_ALPHA_STOP * robot_prev_cmd_[i] +
                     (1.0 - LPF_ALPHA_STOP) * raw_cmd;
             } else {
+                // Use faster filter when moving
                 filtered =
                     LPF_ALPHA * robot_prev_cmd_[i] +
                     (1.0 - LPF_ALPHA) * raw_cmd;
@@ -524,6 +577,7 @@ JoystickOutput Joystick::getCmd() {
             robot_cmd_[i] = raw_cmd;
         }
 
+        // Clip to max_cmd limits
         double maxval = max_cmd_[i];
         if (robot_cmd_[i] > maxval - 1e-3) {
             robot_cmd_[i] = maxval;
@@ -534,11 +588,13 @@ JoystickOutput Joystick::getCmd() {
         robot_prev_cmd_[i] = robot_cmd_[i];
     }
 
+    // Update control flags
     updateMode();
     updateEstopFlag();
     updateSleepFlag();
     updateWakeFlag();
 
+    // Throw exceptions for critical events
     if (estop_flag_.load()) {
         throw JoystickEstopError("E-stop triggered by joystick input.");
     }
@@ -546,6 +602,7 @@ JoystickOutput Joystick::getCmd() {
         throw JoystickSleepError("Sleep triggered by joystick input.");
     }
 
+    // Return command output
     JoystickOutput output;
     output.cmd_vector = robot_cmd_;
     output.mode_id = mode_id_;
