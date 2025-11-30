@@ -32,7 +32,6 @@ Robot::Robot()
 
     battery_voltage_(""),
     battery_soc_(""),
-    disconn_count_(0),
 
     mcu_(MCU_IP, MCU_PORT, MCU_MOTOR_IDS, MCU_HAS_IMU, MCU_HAS_BAT, MCU_HAS_ESTOP)
 {
