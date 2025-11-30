@@ -319,9 +319,6 @@ private:
     std::string battery_voltage_;        ///< Current battery voltage
     std::string battery_soc_;            ///< Battery state of charge (%)
 
-    // Connection health tracking
-    int disconn_count_;                  ///< Consecutive disconnection counter
-
     // Observation data
     std::unordered_map<std::string, std::vector<float>> obs_;  ///< Current observation
 
